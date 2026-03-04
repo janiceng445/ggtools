@@ -1,20 +1,16 @@
-name: Deploy to GitHub Pages (gh-pages branch)
+name: Manual Pages Deploy (placeholder)
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch: {}
 
 jobs:
-  deploy:
+  manual-deploy-placeholder:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: '.'
-          # optional: keep empty to publish repository root
-          # destination_dir: ''
+      - name: Notice
+        run: |
+          echo "This workflow is now manual-only and acts as a placeholder to avoid automatic runs."
+          echo "Use the GitHub Pages automatic build (pages-build-deployment) for regular deployments."
