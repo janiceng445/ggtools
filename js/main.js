@@ -16,13 +16,9 @@ function showPage(name) {
   if (name === 'gas') { renderSavedCar(); loadSavedCar(); }
   
   // Scroll to top when navigating to a new page
-  requestAnimationFrame(() => {
+  setTimeout(() => {
     window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    const appEl = document.getElementById('app');
-    if (appEl) appEl.scrollTop = 0;
-  });
+  }, 0);
 }
 
 function toggleSidebar() {
