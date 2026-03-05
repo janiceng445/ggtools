@@ -13,7 +13,7 @@ let currentServings     = 4;
 let baseServings        = 4;
 let currentUnit         = 'us';
 let aiGeneratedRecipe   = null;
-let newRecipePhotos     = [];  // {data, date} — compressed base64, staged before save
+let newRecipePhotos     = [];  // {url, date} — Cloudinary URL, staged before save
 let newRecipeCoverIndex = 0;
 
 // ── Firestore helpers ──
@@ -21,22 +21,21 @@ function saveRecipe(recipe) {
   db.collection('recipes').doc(recipe.id).set(recipe).catch(console.error);
 }
 
-// Compress an image data URL to JPEG (max 1000px wide, quality 0.70)
-function compressImage(dataUrl) {
-  return new Promise(resolve => {
-    const img = new Image();
-    img.onload = () => {
-      const maxWidth = 1000;
-      let { width, height } = img;
-      if (width > maxWidth) { height = Math.round(height * maxWidth / width); width = maxWidth; }
-      const canvas = document.createElement('canvas');
-      canvas.width = width; canvas.height = height;
-      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-      resolve(canvas.toDataURL('image/jpeg', 0.70));
-    };
-    img.onerror = () => resolve(dataUrl); // fallback: keep original
-    img.src = dataUrl;
+// ── Cloudinary ──
+const CLOUDINARY_CLOUD_NAME    = 'dygj7tb8v';
+const CLOUDINARY_UPLOAD_PRESET = 'gghub-recipebook';
+
+async function uploadToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+    method: 'POST',
+    body: formData
   });
+  if (!res.ok) throw new Error('Cloudinary upload failed');
+  const data = await res.json();
+  return data.secure_url;
 }
 
 // ══════════════════════════════════════════════
@@ -70,8 +69,9 @@ function renderRecipes() {
     el.onclick = () => openRecipe(r.id);
 
     const coverIdx = r.coverPhotoIndex ?? 0;
-    const imgHtml = r.photos && r.photos.length > 0
-      ? `<img src="${r.photos[coverIdx]?.data || r.photos[0].data}" alt="">`
+    const coverPhoto = r.photos?.[coverIdx] || r.photos?.[0];
+    const imgHtml = coverPhoto
+      ? `<img src="${coverPhoto.url || coverPhoto.data}" alt="">`
       : (r.emoji || '🍽️');
 
     el.innerHTML = `
@@ -103,8 +103,9 @@ function openRecipe(id) {
 
   const heroImg = document.getElementById('detail-hero-img');
   if (currentRecipe.photos && currentRecipe.photos.length > 0) {
-    const coverIdx = currentRecipe.coverPhotoIndex ?? 0;
-    heroImg.src = currentRecipe.photos[coverIdx]?.data || currentRecipe.photos[0].data;
+    const coverIdx   = currentRecipe.coverPhotoIndex ?? 0;
+    const coverPhoto = currentRecipe.photos[coverIdx] || currentRecipe.photos[0];
+    heroImg.src = coverPhoto.url || coverPhoto.data;
     heroImg.style.display = 'block';
     document.getElementById('detail-emoji').style.display = 'none';
   } else {
@@ -196,6 +197,8 @@ function renderIngredients() {
   if (!currentRecipe) return;
   const list = document.getElementById('ingredients-list');
   if (!list) return;
+  const clearBtn = document.getElementById('clear-checks-btn');
+  if (clearBtn) clearBtn.style.display = (currentRecipe.checkedIngredients?.length > 0) ? '' : 'none';
 
   list.innerHTML = '';
   (currentRecipe.ingredients || []).forEach((ing, i) => {
@@ -216,8 +219,8 @@ function renderIngredients() {
     el.className = 'ingredient-item' + (isChecked ? ' checked' : '');
     el.innerHTML = `
       <div class="check-box">${isChecked ? '<svg width="12" height="12" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>' : ''}</div>
-      <div class="ingredient-name">${parsed.name}</div>
       ${displayAmt ? `<div class="ingredient-amount">${displayAmt}</div>` : ''}
+      <div class="ingredient-name">${parsed.name}</div>
     `;
     el.onclick = () => toggleIngredient(i, el);
     list.appendChild(el);
@@ -269,6 +272,8 @@ function renderInstructions() {
   if (!currentRecipe) return;
   const list = document.getElementById('instructions-list');
   if (!list) return;
+  const resetBtn = document.getElementById('reset-steps-btn');
+  if (resetBtn) resetBtn.style.display = (currentRecipe.doneSteps?.length > 0) ? '' : 'none';
 
   list.innerHTML = '';
   (currentRecipe.instructions || []).forEach((step, i) => {
@@ -319,7 +324,7 @@ function renderPhotos() {
     el.className = 'photo-thumb' + (isCover ? ' cover-photo' : '');
     el.title = isCover ? 'Cover photo' : 'Set as cover photo';
     el.innerHTML = `
-      <img src="${p.data}" alt="">
+      <img src="${p.url || p.data}" alt="">
       ${p.date ? `<div class="photo-thumb-date">${p.date}</div>` : ''}
       ${isCover ? '<div class="cover-badge">★ Cover</div>' : ''}
     `;
@@ -336,7 +341,7 @@ function setCoverPhoto(index) {
   const photo   = currentRecipe.photos[index];
   const heroImg = document.getElementById('detail-hero-img');
   if (photo && heroImg) {
-    heroImg.src = photo.data;
+    heroImg.src = photo.url || photo.data;
     heroImg.style.display = 'block';
     const emoji = document.getElementById('detail-emoji');
     if (emoji) emoji.style.display = 'none';
@@ -354,7 +359,7 @@ function renderNewRecipePhotos() {
       el.className = 'photo-thumb' + (isCover ? ' cover-photo' : '');
       el.title = isCover ? 'Cover photo' : 'Set as cover photo';
       el.innerHTML = `
-        <img src="${p.data}" alt="">
+        <img src="${p.url || p.data}" alt="">
         ${p.date ? `<div class="photo-thumb-date">${p.date}</div>` : ''}
         ${isCover ? '<div class="cover-badge">★ Cover</div>' : ''}
       `;
@@ -363,6 +368,8 @@ function renderNewRecipePhotos() {
     });
   });
 }
+
+let pendingPhotoFile = null; // file currently being processed in photo-date-modal
 
 // ── Photo upload triggers ──
 function triggerPhotoUpload() {
@@ -387,12 +394,13 @@ function handlePhotoUpload(input) {
 function promptNextPhoto() {
   if (processingIndex >= photosToProcess.length) return;
   const file = photosToProcess[processingIndex];
+  pendingPhotoFile = file;
   const reader = new FileReader();
   reader.onload = e => {
     const modal = document.getElementById('photo-date-modal');
     if (document.getElementById('photo-date-img')) document.getElementById('photo-date-img').src = e.target.result;
     if (document.getElementById('photo-date-input')) document.getElementById('photo-date-input').value = new Date().toISOString().split('T')[0];
-    if (modal) { modal.dataset.currentData = e.target.result; delete modal.dataset.isNewRecipe; }
+    if (modal) delete modal.dataset.isNewRecipe;
     openModal('photo-date-modal');
   };
   reader.readAsDataURL(file);
@@ -412,30 +420,40 @@ function handleNewRecipePhotoUpload(input) {
 function promptNextNewRecipePhoto() {
   if (newRecipeProcessingIndex >= newRecipePhotosToProcess.length) return;
   const file = newRecipePhotosToProcess[newRecipeProcessingIndex];
+  pendingPhotoFile = file;
   const reader = new FileReader();
   reader.onload = e => {
     const modal = document.getElementById('photo-date-modal');
     if (document.getElementById('photo-date-img')) document.getElementById('photo-date-img').src = e.target.result;
     if (document.getElementById('photo-date-input')) document.getElementById('photo-date-input').value = new Date().toISOString().split('T')[0];
-    if (modal) { modal.dataset.currentData = e.target.result; modal.dataset.isNewRecipe = 'true'; }
+    if (modal) modal.dataset.isNewRecipe = 'true';
     openModal('photo-date-modal');
   };
   reader.readAsDataURL(file);
 }
 
-// ── Confirm photo date — compress then store as base64 in Firestore ──
+// ── Confirm photo date — upload to Cloudinary, store URL in Firestore ──
 async function confirmPhotoDate() {
   const modal      = document.getElementById('photo-date-modal');
-  const rawData    = modal?.dataset.currentData;
   const date       = document.getElementById('photo-date-input')?.value || '';
   const confirmBtn = modal?.querySelector('.btn-primary');
 
-  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = 'Processing…'; }
+  if (!pendingPhotoFile) { closeModal('photo-date-modal'); return; }
 
-  const data = await compressImage(rawData);
+  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = 'Uploading…'; }
+
+  let url;
+  try {
+    url = await uploadToCloudinary(pendingPhotoFile);
+  } catch (err) {
+    console.error('Upload failed:', err);
+    showToast('Upload failed. Try again.');
+    if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = 'Add Photo'; }
+    return;
+  }
 
   if (modal?.dataset.isNewRecipe) {
-    newRecipePhotos.push({ data, date });
+    newRecipePhotos.push({ url, date });
     renderNewRecipePhotos();
     closeModal('photo-date-modal');
     if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = 'Add Photo'; }
@@ -446,11 +464,11 @@ async function confirmPhotoDate() {
     if (!currentRecipe) { closeModal('photo-date-modal'); return; }
     if (!currentRecipe.photos) currentRecipe.photos = [];
     const isFirst = currentRecipe.photos.length === 0;
-    currentRecipe.photos.push({ data, date });
+    currentRecipe.photos.push({ url, date });
     if (isFirst) {
       currentRecipe.coverPhotoIndex = 0;
       const heroImg = document.getElementById('detail-hero-img');
-      if (heroImg) { heroImg.src = data; heroImg.style.display = 'block'; }
+      if (heroImg) { heroImg.src = url; heroImg.style.display = 'block'; }
       const emoji = document.getElementById('detail-emoji');
       if (emoji) emoji.style.display = 'none';
     }
@@ -468,11 +486,50 @@ async function confirmPhotoDate() {
 // RECIPE CRUD
 // ══════════════════════════════════════════════
 
+function openEditRecipe() {
+  if (!currentRecipe) return;
+  document.getElementById('edit-name').value         = currentRecipe.name || '';
+  document.getElementById('edit-time').value         = currentRecipe.time || '';
+  document.getElementById('edit-servings').value     = currentRecipe.servings || 4;
+  document.getElementById('edit-emoji').value        = currentRecipe.emoji || '';
+  document.getElementById('edit-ingredients').value  = (currentRecipe.ingredients  || []).join('\n');
+  document.getElementById('edit-instructions').value = (currentRecipe.instructions || []).join('\n');
+  openModal('edit-recipe-modal');
+}
+
+async function saveEditRecipe() {
+  const name = document.getElementById('edit-name')?.value.trim();
+  if (!name) { showToast('Recipe name required'); return; }
+
+  const saveBtn = document.getElementById('edit-save-btn');
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
+
+  currentRecipe.name         = name;
+  currentRecipe.time         = parseInt(document.getElementById('edit-time')?.value)     || currentRecipe.time;
+  currentRecipe.servings     = parseInt(document.getElementById('edit-servings')?.value) || currentRecipe.servings;
+  currentRecipe.emoji        = document.getElementById('edit-emoji')?.value              || currentRecipe.emoji;
+  currentRecipe.ingredients  = (document.getElementById('edit-ingredients')?.value  || '').split('\n').map(l => l.trim()).filter(Boolean);
+  currentRecipe.instructions = (document.getElementById('edit-instructions')?.value || '').split('\n').map(l => l.trim()).filter(Boolean);
+
+  try {
+    await db.collection('recipes').doc(currentRecipe.id).set(currentRecipe);
+    closeModal('edit-recipe-modal');
+    openRecipe(currentRecipe.id);
+    showToast('Recipe updated!');
+  } catch (err) {
+    console.error(err);
+    showToast('Save failed');
+  } finally {
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save'; }
+  }
+}
+
 async function deleteCurrentRecipe() {
   if (!currentRecipe) return;
   if (!confirm('Delete "' + currentRecipe.name + '"?')) return;
   try {
     await db.collection('recipes').doc(currentRecipe.id).delete();
+    closeModal('edit-recipe-modal');
     closeModal('recipe-detail-modal');
     showToast('Recipe deleted');
   } catch (err) {
@@ -502,7 +559,7 @@ function formatRecipeText(r, servings) {
   });
   txt += '\n📝 INSTRUCTIONS:\n';
   (r.instructions || []).forEach((step, i) => { txt += `  ${i + 1}. ${step}\n`; });
-  txt += '\n─'.repeat(40) + '\nShared from GG.Tools 🍴';
+  txt += '\n─'.repeat(40) + '\nShared from GG.Hub 🍴';
   return txt;
 }
 
@@ -512,16 +569,6 @@ function copyShare() {
   navigator.clipboard.writeText(text)
     .then(() => showToast('Copied to clipboard!'))
     .catch(() => showToast('Copy failed'));
-}
-
-function exportRecipe() {
-  if (!currentRecipe) return;
-  const blob = new Blob([JSON.stringify(currentRecipe, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = currentRecipe.name.replace(/\s+/g, '_') + '.json';
-  a.click();
-  showToast('📤 Recipe exported!');
 }
 
 // ── Import ──

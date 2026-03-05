@@ -33,8 +33,27 @@
 #page-container .top-toolbar .search-wrap input { height: 40px; padding: 8px 14px 8px 38px; line-height: 1; }
 #page-container .top-toolbar .btn { height: 40px; padding: 0 16px; }
 
-/* + New button */
-.btn-new { width: 40px; padding: 0 !important; font-size: 1.5rem; line-height: 1; }
+/* + New button (desktop inline) */
+.btn-new { width: 40px; padding: 0 !important; }
+
+/* Floating action button (mobile only) */
+.fab-new {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 200;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
 
 /* ── Recipe Grid ── */
 .recipe-grid {
@@ -138,12 +157,38 @@
 
 .recipe-detail-meta {
   display: flex;
+  align-items: center;
   gap: 14px;
   margin-top: 8px;
   font-size: 0.82rem;
   color: var(--text2);
   flex-wrap: wrap;
 }
+
+.hero-edit-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: rgba(255,255,255,0.92);
+  line-height: 0;
+}
+.hero-edit-btn:hover { color: #fff; }
+
+.hero-share-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #fff;
+  line-height: 0;
+}
+.hero-share-btn:hover { color: rgba(255,255,255,0.75); }
 
 /* ── Ingredients ── */
 .ingredient-item {
@@ -285,6 +330,8 @@
   .recipe-grid { grid-template-columns: 1fr 1fr; }
   #page-container .top-toolbar { flex-wrap: nowrap; }
   #page-container .top-toolbar .search-wrap { flex: 1; min-width: 0; }
+  .btn-new { display: none; }
+  .fab-new { display: flex; align-items: center; justify-content: center; }
 }
 
 @media (max-width: 380px) {

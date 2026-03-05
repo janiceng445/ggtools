@@ -28,8 +28,10 @@
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" placeholder="Search recipes…" id="recipe-search" oninput="renderRecipes()">
       </div>
-      <button class="btn btn-primary btn-new" onclick="openModal('new-recipe-modal')">+</button>
+      <button class="btn btn-secondary btn-new" onclick="openModal('new-recipe-modal')">+</button>
     </div>
+
+    <button class="fab-new" onclick="openModal('new-recipe-modal')" title="New recipe">+</button>
 
     <div class="recipe-grid" id="recipe-grid"></div>
     <div class="empty-state" id="recipe-empty" style="display:none">
@@ -42,6 +44,9 @@
       <div class="modal" style="max-width:720px;position:relative">
         <button class="modal-close" onclick="closeModal('recipe-detail-modal')" style="position:absolute;top:12px;right:12px;z-index:10">✕</button>
         <div class="recipe-detail-header" id="detail-hero" style="min-height:180px">
+          <button class="hero-edit-btn" onclick="openEditRecipe()" title="Edit recipe">
+            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
           <div class="recipe-detail-img-placeholder" id="detail-emoji" style="display:none">🍽️</div>
           <img id="detail-hero-img" src="" alt="" style="display:none" class="recipe-detail-img">
           <div class="recipe-detail-info">
@@ -49,6 +54,9 @@
             <div class="recipe-detail-meta">
               <span id="detail-time">⏱ 30 min</span>
               <span id="detail-servings-label">👤 4 servings</span>
+              <button class="hero-share-btn" onclick="shareRecipe()" title="Share recipe">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </button>
             </div>
           </div>
         </div>
@@ -66,17 +74,6 @@
             <button class="unit-btn active" id="unit-us" onclick="setUnit('us')">US</button>
             <button class="unit-btn" id="unit-metric" onclick="setUnit('metric')">Metric</button>
           </div>
-          <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-sm btn-ghost" onclick="shareRecipe()">
-              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-              Share
-            </button>
-            <button class="btn btn-sm btn-success" onclick="exportRecipe()">
-              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Export
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="deleteCurrentRecipe()">Delete</button>
-          </div>
         </div>
 
         <div class="modal-tabs">
@@ -92,13 +89,13 @@
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Share List
               </button>
-              <button class="btn btn-sm btn-ghost" onclick="clearChecked()">Clear Checks</button>
+              <button id="clear-checks-btn" class="btn btn-sm btn-ghost" onclick="clearChecked()" style="display:none">Clear Checks</button>
             </div>
             <div id="ingredients-list"></div>
           </div>
           <div class="tab-pane" id="tab-instructions">
             <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
-              <button class="btn btn-sm btn-ghost" onclick="clearDone()">Reset Steps</button>
+              <button id="reset-steps-btn" class="btn btn-sm btn-ghost" onclick="clearDone()" style="display:none">Reset Steps</button>
             </div>
             <div id="instructions-list"></div>
           </div>
@@ -213,6 +210,50 @@
         <div class="modal-footer">
           <button class="btn btn-ghost" onclick="closeModal('new-recipe-modal')">Cancel</button>
           <button class="btn btn-primary" onclick="saveNewRecipe()" id="save-recipe-btn">Save Recipe</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ EDIT RECIPE MODAL ════ -->
+    <div class="modal-overlay" id="edit-recipe-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Edit Recipe</h2>
+          <button class="modal-close" onclick="closeModal('edit-recipe-modal')">✕</button>
+        </div>
+        <div class="modal-body" style="max-height:70vh;overflow-y:auto">
+          <div class="input-group">
+            <label>Recipe Name *</label>
+            <input type="text" id="edit-name" placeholder="Recipe name">
+          </div>
+          <div class="input-row">
+            <div class="input-group">
+              <label>Cook Time (min)</label>
+              <input type="number" id="edit-time" min="1">
+            </div>
+            <div class="input-group">
+              <label>Servings</label>
+              <input type="number" id="edit-servings" min="1">
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Emoji (optional)</label>
+            <input type="text" id="edit-emoji" maxlength="2">
+          </div>
+          <hr class="divider">
+          <div class="input-group">
+            <label>Ingredients — one per line</label>
+            <textarea id="edit-ingredients"></textarea>
+          </div>
+          <div class="input-group">
+            <label>Instructions — one step per line</label>
+            <textarea id="edit-instructions"></textarea>
+          </div>
+          <button class="btn btn-danger" onclick="deleteCurrentRecipe()" style="width:100%;margin-top:8px;justify-content:center">Delete Recipe</button>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" onclick="closeModal('edit-recipe-modal')">Cancel</button>
+          <button class="btn btn-primary" id="edit-save-btn" onclick="saveEditRecipe()">Save</button>
         </div>
       </div>
     </div>
