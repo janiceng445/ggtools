@@ -1,4 +1,4 @@
-# GGTools - GG.Tools
+# GGHub - GG.Hub
 
 A modern, dark-themed toolkit application with three main features:
 - **Tip Calculator** - Calculate tips and bill splits with rounding options

@@ -2,15 +2,70 @@
 // TIP CALCULATOR
 // ══════════════════════════════════════════════
 
-let tipPct = 10;
+let tipPct = 20;
 
+function selectPct(el, pct) {
+  document.querySelectorAll('.pct-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  tipPct = pct;
+  // hide custom field if open
+  const customGroup = document.getElementById('custom-tip-group');
+  if (customGroup) customGroup.style.display = 'none';
+  const customInput = document.getElementById('custom-tip');
+  if (customInput) customInput.value = '';
+  calcTip();
+}
+
+function toggleCustomField(el) {
+  const group = document.getElementById('custom-tip-group');
+  if (!group) return;
+  
+  const isOpen = group.style.display !== 'none';
+  if (isOpen) {
+    group.style.display = 'none';
+    el.classList.remove('selected');
+    const customInput = document.getElementById('custom-tip');
+    if (customInput) customInput.value = '';
+    tipPct = 20;
+    const presetPill = document.querySelector('.pct-pill[onclick*="selectPct(this, 20)"]');
+    if (presetPill) presetPill.classList.add('selected');
+    calcTip();
+  } else {
+    document.querySelectorAll('.pct-pill').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    group.style.display = 'block';
+    const customInput = document.getElementById('custom-tip');
+    setTimeout(() => customInput?.focus(), 50);
+  }
+}
+
+// Auto-decimal: insert decimal 2 places from right once 3+ digits are typed
 function handleCurrencyInput(el) {
+  let raw = el.value.replace(/[^0-9]/g, '').replace(/^0+/, '');
+  if (raw === '') {
+    el.value = '';
+    calcTip();
+    return;
+  }
+  if (raw.length <= 2) {
+    el.value = raw;
+  } else {
+    el.value = raw.slice(0, raw.length - 2) + '.' + raw.slice(-2);
+  }
+  setTimeout(() => {
+    el.selectionStart = el.selectionEnd = el.value.length;
+  }, 0);
+  calcTip();
+}
+
+function handlePeopleInput(el) {
   let raw = el.value.replace(/[^0-9]/g, '');
-  if (raw === '') { el.value = ''; calcTip(); return; }
-  const cents = parseInt(raw, 10);
-  const dollars = (cents / 100).toFixed(2);
-  el.value = dollars;
-  setTimeout(() => { el.selectionStart = el.selectionEnd = el.value.length; }, 0);
+  if (raw === '') {
+    el.value = '';
+    calcTip();
+    return;
+  }
+  el.value = parseInt(raw, 10).toString();
   calcTip();
 }
 
@@ -27,46 +82,24 @@ function handleCustomTip(el) {
   }
 }
 
-function toggleCustomField(el) {
-  const group = document.getElementById('custom-tip-group');
-  const isOpen = group.style.display !== 'none';
-  if (isOpen) {
-    group.style.display = 'none';
-    el.classList.remove('selected');
-    document.getElementById('custom-tip').value = '';
-    tipPct = 10;
-    document.querySelector('.pct-pill:not(#custom-pill)').classList.add('selected');
-    calcTip();
-  } else {
-    document.querySelectorAll('.pct-pill').forEach(p => p.classList.remove('selected'));
-    el.classList.add('selected');
-    group.style.display = 'block';
-    setTimeout(() => document.getElementById('custom-tip').focus(), 50);
-  }
-}
-
-function selectPct(el, pct) {
-  document.querySelectorAll('.pct-pill').forEach(p => p.classList.remove('selected'));
-  el.classList.add('selected');
-  tipPct = pct;
-  document.getElementById('custom-tip-group').style.display = 'none';
-  document.getElementById('custom-tip').value = '';
-  calcTip();
-}
-
 function calcTip() {
-  const bill = parseFloat(document.getElementById('bill-amount').value) || 0;
+  const billInput = document.getElementById('bill-amount');
+  const bill = billInput ? parseFloat(billInput.value) || 0 : 0;
+
   const tip = bill * (tipPct / 100);
   const total = bill + tip;
 
-  document.getElementById('res-tip-amt').textContent = '$' + tip.toFixed(2);
-  document.getElementById('res-total').textContent = '$' + total.toFixed(2);
+  const resTip = document.getElementById('res-tip-amt');
+  const resTotal = document.getElementById('res-total');
+  if (resTip) resTip.textContent = '$' + tip.toFixed(2);
+  if (resTotal) resTotal.textContent = '$' + total.toFixed(2);
 
+  const tipResult = document.getElementById('tip-result');
   const show = bill > 0;
-  document.getElementById('tip-result').classList.toggle('visible', show);
+  if (tipResult) tipResult.classList.toggle('visible', show);
 
   if (show) {
-    // Round down
+    // Round down to nearest $0.25
     const rdTotal = Math.floor(total);
     const rdTip = rdTotal - bill;
     const rdDiff = total - rdTotal;
@@ -77,7 +110,7 @@ function calcTip() {
     document.getElementById('rd-tip-pct').textContent = rdPct.toFixed(1) + '%';
     document.getElementById('rd-tip-amt').textContent = '$' + Math.max(0, rdTip).toFixed(2);
 
-    // Round up
+    // Round up to nearest $0.25
     const ruTotal = Math.ceil(total);
     const ruTip = ruTotal - bill;
     const ruDiff = ruTotal - total;
@@ -89,3 +122,4 @@ function calcTip() {
     document.getElementById('ru-tip-amt').textContent = '$' + ruTip.toFixed(2);
   }
 }
+

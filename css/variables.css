@@ -1,3 +1,4 @@
+/* CSS Custom Properties */
 :root {
   --bg: #0a0a0a;
   --surface: #111111;
@@ -18,3 +19,8 @@
   --radius: 14px;
   --radius-sm: 9px;
 }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }

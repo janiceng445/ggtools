@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tip Calculator — GG.Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/navigation.css">
+<link rel="stylesheet" href="/css/forms.css">
+<link rel="stylesheet" href="/css/modal.css">
+<link rel="stylesheet" href="/css/tip-calculator.css">
+</head>
+<body>
+<div id="app">
+  <div id="nav-placeholder"></div>
+
+  <div id="page-container">
+    <div class="page-header">
+      <div class="accent-line"></div>
+      <h1>Tip Calculator</h1>
+      <p>Split bills fairly — no math stress.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Bill Details</div>
+      <div class="input-group">
+        <label>Bill Amount ($)</label>
+        <div class="input-wrap">
+          <input type="text" id="bill-amount" placeholder="0.00" oninput="handleCurrencyInput(this)">
+          <button class="input-clear" onclick="clearField('bill-amount')">✕</button>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label>Tip Percentage (%)</label>
+          <div class="pct-pills">
+            <button class="pct-pill" onclick="selectPct(this, 15)">15%</button>
+            <button class="pct-pill" onclick="selectPct(this, 18)">18%</button>
+            <button class="pct-pill selected" onclick="selectPct(this, 20)">20%</button>
+            <button class="pct-pill" onclick="selectPct(this, 22)">22%</button>
+            <button class="pct-pill" id="custom-pill" onclick="toggleCustomField(this)">—</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="custom-tip-group" style="display:none;margin-bottom:14px">
+        <label>Custom Tip %</label>
+        <input type="text" id="custom-tip" placeholder="18.5" oninput="handleCustomTip(this)">
+      </div>
+
+      <div class="tip-result" id="tip-result">
+        <div class="tip-result-grid">
+          <div class="tip-stat">
+            <div class="tip-stat-val" id="res-tip-amt">$0.00</div>
+            <div class="tip-stat-lbl">TIP</div>
+          </div>
+          <div class="tip-stat">
+            <div class="tip-stat-val" id="res-total">$0.00</div>
+            <div class="tip-stat-lbl">TOTAL BILL</div>
+          </div>
+        </div>
+
+        <hr class="round-divider">
+        <div class="round-grid">
+          <div class="round-box">
+            <div class="round-box-header">
+              <span class="round-box-title">Round Down</span>
+              <span class="round-box-badge badge-down" id="rd-badge">▼ −$0.00</span>
+            </div>
+            <div class="round-total" id="rd-total">$0.00</div>
+            <div class="round-info-table">
+              <div class="round-info-row">
+                <span class="round-info-label">Tip (%):</span>
+                <span class="round-info-value" id="rd-tip-pct">20%</span>
+              </div>
+              <div class="round-info-row">
+                <span class="round-info-label">Tip:</span>
+                <span class="round-info-value" id="rd-tip-amt">$0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="round-box">
+            <div class="round-box-header">
+              <span class="round-box-title">Round Up</span>
+              <span class="round-box-badge badge-up" id="ru-badge">▲ +$0.00</span>
+            </div>
+            <div class="round-total" id="ru-total">$0.00</div>
+            <div class="round-info-table">
+              <div class="round-info-row">
+                <span class="round-info-label">Tip (%):</span>
+                <span class="round-info-value" id="ru-tip-pct">20%</span>
+              </div>
+              <div class="round-info-row">
+                <span class="round-info-label">Tip:</span>
+                <span class="round-info-value" id="ru-tip-amt">$0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="/js/main.js"></script>
+<script src="/js/tip-calculator.js"></script>
+</body>
+</html>

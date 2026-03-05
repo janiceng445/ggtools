@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gas Calculator — GG.Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/navigation.css">
+<link rel="stylesheet" href="/css/forms.css">
+<link rel="stylesheet" href="/css/modal.css">
+<link rel="stylesheet" href="/css/gas-calculator.css">
+</head>
+<body>
+<div id="app">
+  <div id="nav-placeholder"></div>
+
+  <div id="page-container">
+    <div class="page-header">
+      <div class="accent-line" style="background:var(--accent2)"></div>
+      <h1>Gas Calculator</h1>
+      <p>Know exactly how much that fill-up will cost.</p>
+    </div>
+
+    <div class="card" id="saved-car-card" style="display:none">
+      <div class="card-title">My Garage</div>
+      <div id="saved-car-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Vehicle & Fuel Details</div>
+
+      <div class="gas-vehicle-row">
+        <div class="input-group" style="flex:1;margin-bottom:0">
+          <label>Car Make</label>
+          <select id="car-make" onchange="populateModels()">
+            <option value="">Make</option>
+            <option>Acura</option><option>Audi</option><option>BMW</option>
+            <option>Chevrolet</option><option>Chrysler</option><option>Dodge</option>
+            <option>Ford</option><option>GMC</option><option>Honda</option>
+            <option>Hyundai</option><option>Jeep</option><option>Kia</option>
+            <option>Lexus</option><option>Mazda</option><option>Mercedes-Benz</option>
+            <option>Nissan</option><option>Ram</option><option>Subaru</option>
+            <option>Tesla</option><option>Toyota</option><option>Volkswagen</option>
+          </select>
+        </div>
+        <div class="input-group" style="flex:1;margin-bottom:0">
+          <label>Model</label>
+          <select id="car-model" onchange="autoFillTank()"><option value="">—</option></select>
+        </div>
+        <div style="padding-top:22px;flex-shrink:0">
+          <button class="gas-save-btn" onclick="saveCar()" title="Save vehicle">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="input-row" style="margin-top:14px">
+        <div class="input-group">
+          <label>Gas Leftover (%)</label>
+          <div class="input-wrap">
+            <input type="text" id="tank-level" placeholder="e.g. 25" inputmode="numeric" oninput="handleLevelInput(this)">
+            <button class="input-clear" onclick="clearField('tank-level')">✕</button>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Gas Price ($/gal)</label>
+          <div class="input-wrap">
+            <input type="text" id="gas-price" placeholder="e.g. 3.45" inputmode="decimal" oninput="calcGas()">
+            <button class="input-clear" onclick="clearField('gas-price')">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gas-result" id="gas-result">
+        <div class="gas-primary">
+          <div class="gas-primary-label">Pay approximately</div>
+          <div class="gas-primary-val" id="res-rounded-cost">$0.00</div>
+          <div class="gas-primary-sub">rounded to nearest dollar</div>
+        </div>
+        <div class="gas-details-table">
+          <div class="gas-detail-row">
+            <span class="gas-detail-key">Tank Size</span>
+            <span class="gas-detail-val" id="res-tank-size">—</span>
+          </div>
+          <div class="gas-detail-row">
+            <span class="gas-detail-key">Gal. Needed</span>
+            <span class="gas-detail-val" id="res-gallons">—</span>
+          </div>
+          <div class="gas-detail-row">
+            <span class="gas-detail-key">Exact Cost</span>
+            <span class="gas-detail-val" id="res-fill-cost">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="/js/main.js"></script>
+<script src="/js/gas-calculator.js"></script>
+</body>
+</html>
