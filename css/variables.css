@@ -8,7 +8,16 @@
   --accent: #e02020;
   --accent-hover: #c41818;
   --accent-glow: rgba(224,32,32,0.25);
+  --accent-bg-subtle: rgba(224,32,32,0.06);
+  --accent-bg: rgba(224,32,32,0.08);
+  --accent-bg-hover: rgba(224,32,32,0.15);
+  --accent-bg-active: rgba(224,32,32,0.12);
+  --accent-border: rgba(224,32,32,0.2);
   --accent2: #ff6b35;
+  --accent2-bg: rgba(255,107,53,0.08);
+  --accent2-bg-hover: rgba(255,107,53,0.15);
+  --accent2-bg-active: rgba(255,107,53,0.12);
+  --accent2-border: rgba(255,107,53,0.2);
   --accent3: #ff4444;
   --text: #f0f0f0;
   --text2: #888888;

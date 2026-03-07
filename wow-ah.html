@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AH Flipper — GG.Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/wow-ah.css">
+</head>
+<body>
+<div id="app">
+  <div id="nav-placeholder"></div>
+
+  <div id="page-container">
+    <div class="page-header">
+      <div class="accent-line" style="background:var(--accent)"></div>
+      <h1>AH Flipper</h1>
+      <p>World of Warcraft Auction House profit calculator.</p>
+    </div>
+
+    <!-- Saved configs strip -->
+    <div class="ah-configs-bar">
+      <div class="ah-configs-scroll" id="configs-scroll">
+        <span class="ah-configs-empty" id="configs-empty">No saved configs yet</span>
+      </div>
+    </div>
+
+    <!-- Configuration card -->
+    <div class="card">
+      <div class="card-title">Configuration</div>
+
+      <div class="ah-label">Craft Ratio</div>
+      <div class="ah-ratio-grid">
+        <button class="ah-ratio-btn active" data-ratio="1">1:1</button>
+        <button class="ah-ratio-btn" data-ratio="2">1:2</button>
+        <button class="ah-ratio-btn" data-ratio="3">1:3</button>
+        <button class="ah-ratio-btn" data-ratio="4">1:4</button>
+        <button class="ah-ratio-btn" data-ratio="5">1:5</button>
+      </div>
+
+      <div class="ah-form-row">
+        <div class="form-group">
+          <div class="ah-label">Price per Unit</div>
+          <input type="text" id="unit-price" class="ah-input" placeholder="e.g., 5g 25s 50c">
+          <div class="ah-error" id="price-error"></div>
+        </div>
+        <div class="form-group">
+          <div class="ah-label">Save as</div>
+          <div class="ah-save-row">
+            <input type="text" id="config-name" class="ah-input" placeholder="e.g., Silk Cloth">
+            <button id="save-config-btn" class="ah-save-btn">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profit Tiers card -->
+    <div class="card">
+      <div class="ah-tiers-header">
+        <div class="card-title" style="margin-bottom:0">Profit Tiers</div>
+        <div class="ah-tier-toggle">
+          <button class="ah-toggle-btn active" id="toggle-raw" onclick="setTierView('raw')">Raw</button>
+          <button class="ah-toggle-btn" id="toggle-craft" onclick="setTierView('craft')">Crafted</button>
+        </div>
+      </div>
+
+      <div class="ah-tiers-grid">
+        <div class="ah-tier-card breakeven">
+          <div class="ah-tier-name">💀 Breakeven</div>
+          <div class="ah-tier-pct">0%</div>
+          <div class="ah-tier-sell" id="tier-sell-breakeven">—</div>
+          <div class="ah-tier-profit" id="tier-profit-breakeven">0c profit</div>
+        </div>
+        <div class="ah-tier-card minimum">
+          <div class="ah-tier-name">↓ Minimum</div>
+          <div class="ah-tier-pct">5%</div>
+          <div class="ah-tier-sell" id="tier-sell-minimum">—</div>
+          <div class="ah-tier-profit" id="tier-profit-minimum">0c profit</div>
+        </div>
+        <div class="ah-tier-card good">
+          <div class="ah-tier-name">✓ Good</div>
+          <div class="ah-tier-pct">15%</div>
+          <div class="ah-tier-sell" id="tier-sell-good">—</div>
+          <div class="ah-tier-profit" id="tier-profit-good">0c profit</div>
+        </div>
+        <div class="ah-tier-card great">
+          <div class="ah-tier-name">★ Great</div>
+          <div class="ah-tier-pct">30%</div>
+          <div class="ah-tier-sell" id="tier-sell-great">—</div>
+          <div class="ah-tier-profit" id="tier-profit-great">0c profit</div>
+        </div>
+        <div class="ah-tier-card extreme">
+          <div class="ah-tier-name">⚡ Extreme</div>
+          <div class="ah-tier-pct">50%</div>
+          <div class="ah-tier-sell" id="tier-sell-extreme">—</div>
+          <div class="ah-tier-profit" id="tier-profit-extreme">0c profit</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resell Comparison card -->
+    <div class="card">
+      <div class="ah-resell-header">
+        <div class="card-title" style="margin-bottom:0">Resell Price Comparison</div>
+        <button id="clear-resell-btn" class="ah-clear-btn">Clear</button>
+      </div>
+
+      <div class="ah-resell-grid">
+        <div class="ah-resell-col">
+          <div class="ah-label">Resell as Raw Material</div>
+          <input type="text" id="resell-raw" class="ah-input" placeholder="e.g., 27s 50c">
+          <div class="ah-error" id="resell-raw-error"></div>
+          <div class="ah-comparison-item current" id="raw-result-item" style="display:none">
+            <div class="ah-comp-row">Your Price <span id="custom-raw-input-display">—</span></div>
+            <div class="ah-comp-row">Profit <span id="custom-raw-profit">—</span></div>
+            <div class="ah-comp-row">Equiv. Crafted <span id="custom-raw-equivalent">—</span></div>
+          </div>
+        </div>
+        <div class="ah-resell-col">
+          <div class="ah-label">Resell as Crafted</div>
+          <input type="text" id="resell-craft" class="ah-input" placeholder="e.g., 1g 44s 20c">
+          <div class="ah-error" id="resell-craft-error"></div>
+          <div class="ah-comparison-item alternative" id="craft-result-item" style="display:none">
+            <div class="ah-comp-row">Your Price <span id="custom-craft-input-display">—</span></div>
+            <div class="ah-comp-row">Profit <span id="custom-craft-profit">—</span></div>
+            <div class="ah-comp-row">Equiv. Raw <span id="custom-craft-equivalent">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ah-recommendation" id="recommendation-box">
+        <div class="ah-rec-label">Recommendation</div>
+        <div class="ah-rec-text" id="recommendation-text"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/wow-ah.js"></script>
+<script>initNav();</script>
+</body>
+</html>

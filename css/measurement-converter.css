@@ -38,7 +38,7 @@
   transition: border-color 0.15s;
 }
 .temp-card:focus-within {
-  border-color: var(--accent2);
+  border-color: var(--accent);
 }
 
 .temp-label {
@@ -83,8 +83,8 @@
 }
 .unit-btn:hover {
   background: var(--surface3);
-  border-color: var(--accent2);
-  color: var(--accent2);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* ── Main input ── */
@@ -101,7 +101,7 @@
   padding: 8px 0;
   transition: border-color 0.15s;
 }
-.conv-input:focus { outline: none; border-bottom-color: var(--accent2); }
+.conv-input:focus { outline: none; border-bottom-color: var(--accent); }
 .conv-input::placeholder { color: var(--text3); }
 
 /* ── Ingredient button ── */
@@ -110,10 +110,10 @@
   align-items: center;
   gap: 6px;
   padding: 8px 18px;
-  background: rgba(255,107,53,0.08);
-  border: 1px dashed rgba(255,107,53,0.4);
+  background: var(--accent-bg);
+  border: 1px dashed var(--accent-border);
   border-radius: 100px;
-  color: var(--accent2);
+  color: var(--accent);
   font-family: 'Inter', sans-serif;
   font-size: 0.82rem;
   font-weight: 500;
@@ -121,7 +121,7 @@
   transition: all 0.15s;
   max-width: 260px;
 }
-.ingredient-btn:hover { background: rgba(255,107,53,0.15); border-color: var(--accent2); }
+.ingredient-btn:hover { background: var(--accent-bg-hover); border-color: var(--accent); }
 
 /* ── Swap button ── */
 .swap-btn {
@@ -138,14 +138,14 @@
   justify-content: center;
   transition: all 0.15s;
 }
-.swap-btn:hover { color: var(--accent2); border-color: var(--accent2); }
+.swap-btn:hover { color: var(--accent); border-color: var(--accent); }
 
 /* ── Result ── */
 .conv-result {
   font-family: 'Outfit', sans-serif;
   font-size: 2.4rem;
   font-weight: 700;
-  color: var(--accent2);
+  color: var(--accent);
   text-align: center;
   min-height: 3rem;
   margin-top: 8px;
@@ -220,8 +220,8 @@
   transition: all 0.15s;
   gap: 3px;
 }
-.picker-unit-btn:hover { border-color: var(--accent2); background: rgba(255,107,53,0.07); }
-.picker-unit-btn.active { border-color: var(--accent2); background: rgba(255,107,53,0.12); }
+.picker-unit-btn:hover { border-color: var(--accent); background: var(--accent-bg); }
+.picker-unit-btn.active { border-color: var(--accent); background: var(--accent-bg-active); }
 
 .pu-label {
   font-family: 'Outfit', sans-serif;
@@ -229,7 +229,7 @@
   font-weight: 700;
   color: var(--text);
 }
-.picker-unit-btn.active .pu-label { color: var(--accent2); }
+.picker-unit-btn.active .pu-label { color: var(--accent); }
 
 .pu-full {
   font-size: 0.68rem;

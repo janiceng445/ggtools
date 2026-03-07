@@ -2,7 +2,7 @@
 
 .tip-result {
   background: linear-gradient(135deg, rgba(224,32,32,0.10), rgba(224,32,32,0.03));
-  border: 1px solid rgba(224,32,32,0.2);
+  border: 1px solid var(--accent-border);
   border-radius: var(--radius);
   padding: 22px;
   margin-top: 10px;
@@ -35,7 +35,7 @@
 }
 
 /* ── Round up / down boxes ── */
-.round-divider { border: none; border-top: 1px solid rgba(224,32,32,0.15); margin: 18px 0; }
+.round-divider { border: none; border-top: 1px solid var(--accent-bg-hover); margin: 18px 0; }
 
 .round-label {
   font-size: 0.72rem;

@@ -1,0 +1,391 @@
+/* ── WOW AH Flipper ── */
+
+#page-container {
+  display: block;
+}
+
+/* ── Configs bar ── */
+.ah-configs-bar {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.ah-configs-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.ah-configs-scroll::-webkit-scrollbar { display: none; }
+
+.ah-configs-empty {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text3);
+  padding: 8px 0;
+  white-space: nowrap;
+}
+
+.ah-config-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.ah-config-pill:hover {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.ah-config-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ah-config-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ah-config-meta {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  color: var(--text3);
+}
+
+.ah-config-delete {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.ah-config-delete:hover { color: var(--danger); }
+
+/* ── Card ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text2);
+  margin-bottom: 16px;
+}
+
+/* ── Labels / inputs ── */
+.ah-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+
+.ah-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+.ah-input:focus { outline: none; border-color: var(--accent); }
+.ah-input::placeholder { color: var(--text3); }
+
+.ah-error {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  color: var(--danger);
+  min-height: 1.1em;
+  margin-top: 4px;
+}
+
+/* ── Ratio buttons ── */
+.ah-ratio-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.ah-ratio-btn {
+  padding: 5px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text2);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ah-ratio-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.ah-ratio-btn.active {
+  background: var(--accent-bg-active);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Form row ── */
+.ah-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.ah-save-row {
+  display: flex;
+  gap: 8px;
+}
+.ah-save-row .ah-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.ah-save-btn {
+  padding: 10px 16px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.ah-save-btn:hover { background: var(--accent-hover); }
+
+/* ── Tiers header ── */
+.ah-tiers-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.ah-tier-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.ah-toggle-btn {
+  padding: 5px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text2);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ah-toggle-btn.active {
+  background: var(--accent-bg-active);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Tier cards ── */
+.ah-tiers-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.ah-tier-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.ah-tier-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text2);
+  white-space: nowrap;
+}
+
+.ah-tier-pct {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text3);
+}
+
+.ah-tier-sell {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent);
+  word-break: break-all;
+}
+
+.ah-tier-profit {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.62rem;
+  color: var(--text3);
+}
+
+/* Tier accent left borders */
+.ah-tier-card.breakeven { border-left: 3px solid var(--text3); }
+.ah-tier-card.minimum   { border-left: 3px solid #4ade80; }
+.ah-tier-card.good      { border-left: 3px solid #22d3ee; }
+.ah-tier-card.great     { border-left: 3px solid #a78bfa; }
+.ah-tier-card.extreme   { border-left: 3px solid var(--accent); }
+
+/* ── Resell comparison ── */
+.ah-resell-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.ah-clear-btn {
+  padding: 5px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text2);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ah-clear-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+.ah-resell-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.ah-resell-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ah-comparison-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+}
+.ah-comparison-item.current { border-color: var(--accent); background: var(--accent-bg); }
+
+.ah-comp-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  color: var(--text2);
+}
+.ah-comp-row span {
+  font-weight: 600;
+  color: var(--text);
+}
+.ah-comparison-item.current .ah-comp-row span { color: var(--accent); }
+
+/* ── Recommendation ── */
+.ah-recommendation {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+}
+.ah-recommendation.show { display: flex; }
+
+.ah-rec-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.ah-rec-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .ah-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ah-tiers-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* Hide pct on very small to save space */
+  .ah-tier-pct { display: none; }
+
+  .ah-resell-grid {
+    grid-template-columns: 1fr;
+  }
+
+}

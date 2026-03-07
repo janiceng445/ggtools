@@ -95,7 +95,7 @@
 .modal-tab.active {
   color: var(--accent);
   border-bottom-color: var(--accent);
-  background: rgba(224,32,32,0.07);
+  background: var(--accent-bg);
 }
 
 .tab-pane { display: none; }

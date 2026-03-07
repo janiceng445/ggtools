@@ -96,7 +96,7 @@ html, body {
   align-items: center;
   gap: 10px;
   padding: 16px;
-  background: rgba(224,32,32,0.06);
+  background: var(--accent-bg-subtle);
   border: 1px dashed rgba(224,32,32,0.3);
   border-radius: var(--radius-sm);
   margin-top: 12px;

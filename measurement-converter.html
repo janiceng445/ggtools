@@ -16,7 +16,7 @@
 
   <div id="page-container">
     <div class="page-header">
-      <div class="accent-line" style="background:var(--accent2)"></div>
+      <div class="accent-line" style="background:var(--accent)"></div>
       <h1>Converter</h1>
       <p>Quick volume & weight conversions for cooking.</p>
     </div>
@@ -25,11 +25,11 @@
     <div class="temp-wrap">
       <div class="temp-card">
         <div class="temp-label">°F</div>
-        <input type="text" id="temp-f" class="temp-input" placeholder="32" inputmode="decimal" oninput="tempFromF()">
+        <input type="text" id="temp-f" class="temp-input" placeholder="32" inputmode="decimal" oninput="tempFromF()" onclick="this.select()">
       </div>
       <div class="temp-card">
         <div class="temp-label">°C</div>
-        <input type="text" id="temp-c" class="temp-input" placeholder="0" inputmode="decimal" oninput="tempFromC()">
+        <input type="text" id="temp-c" class="temp-input" placeholder="0" inputmode="decimal" oninput="tempFromC()" onclick="this.select()">
       </div>
     </div>
 
@@ -42,7 +42,7 @@
       </button>
 
       <!-- Input -->
-      <input type="text" id="conv-input" class="conv-input" placeholder="0" inputmode="decimal" oninput="updateResult()">
+      <input type="text" id="conv-input" class="conv-input" placeholder="0" inputmode="decimal" oninput="updateResult()" onclick="this.select()">
 
       <!-- Swap button -->
       <button class="swap-btn" onclick="swapUnits()" title="Swap">⇅</button>

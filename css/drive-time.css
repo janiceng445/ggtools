@@ -1,0 +1,165 @@
+/* ── Drive Time ── */
+
+#page-container {
+  display: block;
+}
+
+.drive-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  max-width: 340px;
+  margin: 40px 0 0;
+}
+
+/* ── Mode toggle ── */
+.drive-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.drive-mode-btn {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text2);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+.drive-mode-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.drive-mode-btn.active {
+  background: var(--accent-bg-active);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Field group ── */
+.drive-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drive-field-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text2);
+}
+
+/* ── Time input ── */
+.drive-time-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  padding: 8px 0;
+  transition: border-color 0.15s;
+  cursor: pointer;
+}
+.drive-time-input:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+/* ── Duration cards ── */
+.drive-duration {
+  display: flex;
+  gap: 12px;
+}
+
+.drive-dur-card {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 12px 10px;
+  gap: 4px;
+  transition: border-color 0.15s;
+}
+.drive-dur-card:focus-within {
+  border-color: var(--accent);
+}
+
+.drive-dur-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text);
+  -moz-appearance: textfield;
+}
+.drive-dur-input::-webkit-outer-spin-button,
+.drive-dur-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.drive-dur-input::placeholder { color: var(--text3); }
+
+.drive-dur-unit {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+/* ── Result ── */
+.drive-result-wrap {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 20px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+}
+
+.drive-result-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.drive-result {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+@media (max-width: 640px) {
+  .drive-wrap {
+    margin: 40px auto 0;
+  }
+}

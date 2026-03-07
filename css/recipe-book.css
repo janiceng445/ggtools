@@ -25,7 +25,7 @@
 }
 
 .nr-assist-btn:hover { background: var(--surface3); color: var(--text); }
-.nr-assist-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(224,32,32,0.07); }
+.nr-assist-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
 
 .nr-assist-panel {
   background: var(--surface2);
@@ -81,13 +81,13 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: rgba(224,32,32,0.15);
+  background: var(--accent-bg-hover);
   border: 1px solid rgba(224,32,32,0.4);
   color: var(--accent);
   font-size: 1.6rem;
   line-height: 1;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(224,32,32,0.15);
+  box-shadow: 0 4px 16px var(--accent-bg-hover);
 }
 
 /* ── Recipe Grid ── */
@@ -138,7 +138,7 @@
   display: inline-block;
   padding: 2px 8px;
   border-radius: 100px;
-  background: rgba(224,32,32,0.12);
+  background: var(--accent-bg-active);
   color: var(--accent);
   font-size: 0.72rem;
   font-weight: 600;
@@ -287,7 +287,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(224,32,32,0.15);
+  background: var(--accent-bg-hover);
   border: 2px solid rgba(224,32,32,0.35);
   color: var(--accent);
   font-weight: 700;
@@ -383,7 +383,7 @@
 }
 
 .sort-btn:hover { background: var(--surface3); color: var(--text); }
-.sort-btn.active { background: rgba(224,32,32,0.1); border-color: var(--accent); color: var(--accent); }
+.sort-btn.active { background: var(--accent-bg-active); border-color: var(--accent); color: var(--accent); }
 
 /* ── View toggle ── */
 .view-toggle {
@@ -410,7 +410,7 @@
   transition: all 0.15s;
 }
 .view-btn:hover { color: var(--text); background: var(--surface3); }
-.view-btn.active { background: rgba(224,32,32,0.1); color: var(--accent); }
+.view-btn.active { background: var(--accent-bg-active); color: var(--accent); }
 
 /* ── List view ── */
 .recipe-list {
@@ -553,7 +553,7 @@
   transition: all 0.15s;
 }
 .photo-viewer-cover-btn:hover { background: rgba(255,255,255,0.2); }
-.photo-viewer-cover-btn.is-cover { background: rgba(224,32,32,0.25); border-color: var(--accent); color: var(--accent); }
+.photo-viewer-cover-btn.is-cover { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
 
 /* ── Responsive ── */
 @media (max-width: 640px) {
