@@ -34,6 +34,7 @@ const INGREDIENTS = [
   { key: 'oil_olive',  label: 'Olive oil',          gPerMl: 0.908 },
   { key: 'sugar_pow',  label: 'Powdered sugar',     gPerMl: 0.507 },
   { key: 'rice',       label: 'Rice (uncooked)',    gPerMl: 0.782 },
+  { key: 'flour_rice', label: 'Rice flour',         gPerMl: 0.637 },
   { key: 'oats',       label: 'Rolled oats',        gPerMl: 0.338 },
   { key: 'salt',       label: 'Salt (table)',       gPerMl: 1.218 },
   { key: 'oil_veg',    label: 'Vegetable oil',      gPerMl: 0.915 },
