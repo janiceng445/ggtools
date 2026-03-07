@@ -804,13 +804,17 @@ function compressImageForAI(file) {
 async function scanRecipeFromImage() {
   if (!pendingScanFiles.length) { showToast('Upload an image first'); return; }
 
-  const btn     = document.getElementById('scan-btn');
-  const loading = document.getElementById('scan-loading');
-  const result  = document.getElementById('scan-result');
+  const btn      = document.getElementById('scan-btn');
+  const clearBtn = document.getElementById('scan-clear-btn');
+  const uploadArea = document.getElementById('scan-upload-area');
+  const loading  = document.getElementById('scan-loading');
+  const result   = document.getElementById('scan-result');
 
-  if (btn)     btn.style.display     = 'none';
-  if (loading) loading.style.display = 'flex';
-  if (result)  result.style.display  = 'none';
+  if (btn)        btn.style.display        = 'none';
+  if (clearBtn)   clearBtn.style.display   = 'none';
+  if (uploadArea) uploadArea.style.pointerEvents = 'none';
+  if (loading)    loading.style.display    = 'flex';
+  if (result)     result.style.display     = 'none';
 
   try {
     const compressed = await Promise.all(pendingScanFiles.map(compressImageForAI));
@@ -870,9 +874,11 @@ Rules:
   } catch (err) {
     showToast('Scan failed. Try a clearer image.');
     console.error(err);
-    if (btn) btn.style.display = 'inline-flex';
+    if (btn)      btn.style.display      = 'inline-flex';
+    if (clearBtn) clearBtn.style.display = 'inline-flex';
   } finally {
-    if (loading) loading.style.display = 'none';
+    if (loading)    loading.style.display          = 'none';
+    if (uploadArea) uploadArea.style.pointerEvents = '';
   }
 }
 
