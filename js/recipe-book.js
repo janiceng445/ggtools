@@ -217,8 +217,26 @@ function convertAmount(amount, unit) {
   return { amount: parseFloat((amount * conv.metric.factor).toFixed(0)), unit: conv.metric.unit };
 }
 
+const MEASURE_UNITS = new Set([
+  'tsp','teaspoon','teaspoons',
+  'tbsp','tablespoon','tablespoons',
+  'cup','cups','c',
+  'oz','ounce','ounces',
+  'lb','lbs','pound','pounds',
+  'g','gram','grams',
+  'kg','kilogram','kilograms',
+  'ml','milliliter','milliliters',
+  'l','liter','liters',
+  'fl','pint','pints','pt',
+  'quart','quarts','qt',
+  'gallon','gallons','gal',
+  'pinch','dash','handful','bunch','clove','cloves',
+  'slice','slices','piece','pieces','can','cans',
+  'package','pkg','pkg.','jar','bottle',
+]);
+
 function parseIngredient(line) {
-  const match = line.match(/^([\d\/.]+)\s*([a-zA-Z]*)\s+(.+)$/);
+  const match = line.match(/^([\d\/.]+)\s*([a-zA-Z.]*)\s*(.*)$/);
   if (match) {
     let amt = match[1];
     if (amt.includes('/')) {
@@ -227,7 +245,13 @@ function parseIngredient(line) {
     } else {
       amt = parseFloat(amt);
     }
-    return { amount: amt, unit: match[2] || '', name: match[3] };
+    const unitWord = match[2].toLowerCase();
+    if (MEASURE_UNITS.has(unitWord) && match[3].trim()) {
+      return { amount: amt, unit: match[2], name: match[3].trim() };
+    }
+    // No recognized unit — number is still a quantity, rest is the name
+    const rest = (match[2] + ' ' + match[3]).trim();
+    return { amount: amt, unit: '', name: rest };
   }
   return { amount: null, unit: '', name: line };
 }
@@ -260,14 +284,20 @@ function renderIngredients() {
       displayUnit = conv.unit;
     }
 
-    const displayAmt = scaled !== null ? (scaled + ' ' + displayUnit).trim() : '';
     const isChecked  = currentRecipe.checkedIngredients?.includes(i);
+
+    let amtHtml = '';
+    if (scaled !== null) {
+      amtHtml = displayUnit
+        ? `<div class="ingredient-amount"><span class="ing-qty">${scaled}</span> <span class="ing-unit">${displayUnit}</span></div>`
+        : `<div class="ingredient-amount"><span class="ing-qty">${scaled}</span></div>`;
+    }
 
     const el = document.createElement('div');
     el.className = 'ingredient-item' + (isChecked ? ' checked' : '');
     el.innerHTML = `
       <div class="check-box">${isChecked ? '<svg width="12" height="12" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>' : ''}</div>
-      ${displayAmt ? `<div class="ingredient-amount">${displayAmt}</div>` : ''}
+      ${amtHtml}
       <div class="ingredient-name">${parsed.name}</div>
     `;
     el.onclick = () => toggleIngredient(i, el);

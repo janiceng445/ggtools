@@ -260,7 +260,9 @@
 .ingredient-item.checked .check-box { background: var(--success); border-color: var(--success); }
 
 .ingredient-name { font-size: 0.9rem; flex: 1; }
-.ingredient-amount { font-size: 0.82rem; color: var(--accent2); font-weight: 600; }
+.ingredient-amount { font-size: 0.82rem; color: var(--accent2); font-weight: 600; white-space: nowrap; }
+.ing-qty { color: var(--accent2); }
+.ing-unit { color: var(--accent2); font-weight: 700; }
 
 /* ── Instructions ── */
 .step-item {

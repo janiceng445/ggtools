@@ -1,0 +1,245 @@
+/* ── Measurement Converter ── */
+
+#page-container {
+  display: block;
+}
+
+.conv-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 340px;
+  margin: 40px 0 0;
+}
+
+/* ── Temperature cards ── */
+.temp-wrap {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 340px;
+  margin: 40px 0 0;
+}
+
+.temp-card {
+  flex: 1;
+  aspect-ratio: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  transition: border-color 0.15s;
+}
+.temp-card:focus-within {
+  border-color: var(--accent2);
+}
+
+.temp-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text2);
+  text-transform: uppercase;
+}
+
+.temp-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.temp-input::placeholder { color: var(--text3); }
+
+/* ── Unit buttons ── */
+.unit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text2);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 110px;
+  justify-content: center;
+}
+.unit-btn:hover {
+  background: var(--surface3);
+  border-color: var(--accent2);
+  color: var(--accent2);
+}
+
+/* ── Main input ── */
+.conv-input {
+  width: 100%;
+  font-family: 'Outfit', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  text-align: center;
+  padding: 8px 0;
+  transition: border-color 0.15s;
+}
+.conv-input:focus { outline: none; border-bottom-color: var(--accent2); }
+.conv-input::placeholder { color: var(--text3); }
+
+/* ── Ingredient button ── */
+.ingredient-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: rgba(255,107,53,0.08);
+  border: 1px dashed rgba(255,107,53,0.4);
+  border-radius: 100px;
+  color: var(--accent2);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  max-width: 260px;
+}
+.ingredient-btn:hover { background: rgba(255,107,53,0.15); border-color: var(--accent2); }
+
+/* ── Swap button ── */
+.swap-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 1rem;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.swap-btn:hover { color: var(--accent2); border-color: var(--accent2); }
+
+/* ── Result ── */
+.conv-result {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--accent2);
+  text-align: center;
+  min-height: 3rem;
+  margin-top: 8px;
+}
+.conv-result--error {
+  font-size: 0.9rem;
+  color: var(--text2);
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+}
+
+/* ── Picker overlay ── */
+.picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.picker-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.picker-sheet {
+  width: 100%;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 20px 20px 32px;
+  transform: translateY(100%);
+  transition: transform 0.25s ease;
+}
+.picker-overlay.open .picker-sheet {
+  transform: translateY(0);
+}
+
+.picker-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text2);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.picker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+/* Ingredient list: 1 column since names are longer */
+.picker-grid--ingredients {
+  grid-template-columns: 1fr;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.picker-unit-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  gap: 3px;
+}
+.picker-unit-btn:hover { border-color: var(--accent2); background: rgba(255,107,53,0.07); }
+.picker-unit-btn.active { border-color: var(--accent2); background: rgba(255,107,53,0.12); }
+
+.pu-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.picker-unit-btn.active .pu-label { color: var(--accent2); }
+
+.pu-full {
+  font-size: 0.68rem;
+  color: var(--text3);
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 640px) {
+  .conv-wrap,
+  .temp-wrap {
+    margin: 40px auto 0;
+  }
+}

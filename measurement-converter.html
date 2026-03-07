@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Converter — GG.Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/measurement-converter.css">
+</head>
+<body>
+<div id="app">
+  <div id="nav-placeholder"></div>
+
+  <div id="page-container">
+    <div class="page-header">
+      <div class="accent-line" style="background:var(--accent2)"></div>
+      <h1>Converter</h1>
+      <p>Quick volume & weight conversions for cooking.</p>
+    </div>
+
+    <!-- Temperature converter -->
+    <div class="temp-wrap">
+      <div class="temp-card">
+        <div class="temp-label">°F</div>
+        <input type="text" id="temp-f" class="temp-input" placeholder="32" inputmode="decimal" oninput="tempFromF()">
+      </div>
+      <div class="temp-card">
+        <div class="temp-label">°C</div>
+        <input type="text" id="temp-c" class="temp-input" placeholder="0" inputmode="decimal" oninput="tempFromC()">
+      </div>
+    </div>
+
+    <div class="conv-wrap">
+
+      <!-- FROM unit button -->
+      <button class="unit-btn" id="from-btn" onclick="openPicker('from')">
+        <span id="from-label">tbsp</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+
+      <!-- Input -->
+      <input type="text" id="conv-input" class="conv-input" placeholder="0" inputmode="decimal" oninput="updateResult()">
+
+      <!-- Swap button -->
+      <button class="swap-btn" onclick="swapUnits()" title="Swap">⇅</button>
+
+      <!-- TO unit button -->
+      <button class="unit-btn" id="to-btn" onclick="openPicker('to')">
+        <span id="to-label">tsp</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+
+      <!-- Ingredient picker (shown only when mixing volume ↔ weight) -->
+      <button class="ingredient-btn" id="ingredient-btn" onclick="openIngredientPicker()" style="display:none">
+        <span id="ingredient-label">Select ingredient</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+
+      <!-- Result -->
+      <div class="conv-result" id="conv-result"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Unit picker overlay -->
+<div class="picker-overlay" id="picker-overlay" onclick="closePicker()">
+  <div class="picker-sheet" onclick="event.stopPropagation()">
+    <div class="picker-title" id="picker-title">Select unit</div>
+    <div class="picker-grid" id="picker-grid"></div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/measurement-converter.js"></script>
+<script>initNav();</script>
+</body>
+</html>
