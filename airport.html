@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airport Planner — GG.Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/airport.css">
+</head>
+<body>
+<div id="app">
+  <div id="nav-placeholder"></div>
+
+  <div id="page-container">
+    <div class="page-header">
+      <div class="accent-line" style="background:var(--accent)"></div>
+      <h1>Airport Planner</h1>
+      <p>Know exactly when to leave for your flight.</p>
+    </div>
+
+    <div class="airport-wrap">
+
+      <!-- Flight type toggle -->
+      <div class="airport-toggle">
+        <button class="airport-mode-btn active" id="mode-domestic" onclick="setFlightType('domestic')">Domestic</button>
+        <button class="airport-mode-btn" id="mode-international" onclick="setFlightType('international')">International</button>
+      </div>
+
+      <!-- Buffer info pill -->
+      <div class="airport-buffer-pill" id="buffer-pill">Arrive 2 hrs before departure</div>
+
+      <!-- Flight departure time -->
+      <div class="airport-field">
+        <div class="airport-field-label">Flight departure time</div>
+        <input type="time" id="flight-time" class="airport-time-input" oninput="calcAirport()" onclick="this.select()">
+      </div>
+
+      <!-- Drive duration -->
+      <div class="airport-field">
+        <div class="airport-field-label">Drive to airport</div>
+        <div class="airport-duration">
+          <div class="airport-dur-card">
+            <input type="number" id="drive-hours" class="airport-dur-input" placeholder="0" min="0" max="23" oninput="calcAirport()" onclick="this.select()">
+            <span class="airport-dur-unit">hr</span>
+          </div>
+          <div class="airport-dur-card">
+            <input type="number" id="drive-mins" class="airport-dur-input" placeholder="0" min="0" max="59" oninput="calcAirport()" onclick="this.select()">
+            <span class="airport-dur-unit">min</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="airport-results" id="airport-results" style="display:none">
+        <div class="airport-result-row">
+          <div class="airport-result-label">Leave home by</div>
+          <div class="airport-result-value" id="result-depart"></div>
+        </div>
+        <div class="airport-divider"></div>
+        <div class="airport-result-row secondary">
+          <div class="airport-result-label">Arrive at airport by</div>
+          <div class="airport-result-value secondary" id="result-arrive"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/airport.js"></script>
+<script>initNav();</script>
+</body>
+</html>

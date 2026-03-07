@@ -1,0 +1,195 @@
+/* ── Airport Planner ── */
+
+#page-container {
+  display: block;
+}
+
+.airport-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 340px;
+  margin: 40px 0 0;
+}
+
+/* ── Flight type toggle ── */
+.airport-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.airport-mode-btn {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text2);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+.airport-mode-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.airport-mode-btn.active {
+  background: var(--accent-bg-active);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Buffer info pill ── */
+.airport-buffer-pill {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 5px 12px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: 100px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+/* ── Field group ── */
+.airport-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.airport-field-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text2);
+}
+
+/* ── Time input ── */
+.airport-time-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  padding: 8px 0;
+  transition: border-color 0.15s;
+  cursor: pointer;
+}
+.airport-time-input:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+/* ── Duration cards ── */
+.airport-duration {
+  display: flex;
+  gap: 12px;
+}
+
+.airport-dur-card {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 12px 10px;
+  gap: 4px;
+  transition: border-color 0.15s;
+}
+.airport-dur-card:focus-within {
+  border-color: var(--accent);
+}
+
+.airport-dur-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text);
+  -moz-appearance: textfield;
+}
+.airport-dur-input::-webkit-outer-spin-button,
+.airport-dur-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.airport-dur-input::placeholder { color: var(--text3); }
+
+.airport-dur-unit {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+/* ── Results ── */
+.airport-results {
+  flex-direction: column;
+  gap: 0;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.airport-result-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 18px 20px;
+}
+.airport-result-row.secondary {
+  opacity: 0.65;
+}
+
+.airport-divider {
+  height: 1px;
+  background: var(--accent-border);
+}
+
+.airport-result-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.airport-result-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1.1;
+}
+.airport-result-value.secondary {
+  font-size: 2rem;
+}
+
+@media (max-width: 640px) {
+  .airport-wrap {
+    margin: 40px auto 0;
+  }
+}
