@@ -43,6 +43,7 @@ async function uploadToCloudinary(file) {
 
 // ── Sort & search ──
 let recipeSort = localStorage.getItem('recipe-sort') || 'recent';
+let recipeView = localStorage.getItem('recipe-view') || 'grid';
 
 function setRecipeSort(sort) {
   recipeSort = sort;
@@ -50,6 +51,15 @@ function setRecipeSort(sort) {
   document.getElementById('sort-recent')?.classList.toggle('active', sort === 'recent');
   document.getElementById('sort-alpha')?.classList.toggle('active',  sort === 'alpha');
   renderRecipes();
+}
+
+function setRecipeView(view) {
+  recipeView = view;
+  localStorage.setItem('recipe-view', view);
+  document.getElementById('view-grid')?.classList.toggle('active', view === 'grid');
+  document.getElementById('view-list')?.classList.toggle('active', view === 'list');
+  const grid = document.getElementById('recipe-grid');
+  if (grid) grid.className = view === 'list' ? 'recipe-list' : 'recipe-grid';
 }
 
 function handleSearchInput() {
@@ -74,9 +84,12 @@ function renderRecipes() {
 
   if (!grid) return;
 
-  // Apply active state to sort buttons
+  // Apply active state to sort + view buttons
   document.getElementById('sort-recent')?.classList.toggle('active', recipeSort === 'recent');
   document.getElementById('sort-alpha')?.classList.toggle('active',  recipeSort === 'alpha');
+  document.getElementById('view-grid')?.classList.toggle('active', recipeView === 'grid');
+  document.getElementById('view-list')?.classList.toggle('active', recipeView === 'list');
+  grid.className = recipeView === 'list' ? 'recipe-list' : 'recipe-grid';
 
   let filtered = recipes.filter(r =>
     r.name.toLowerCase().includes(search) || (r.category || '').toLowerCase().includes(search)
@@ -96,7 +109,7 @@ function renderRecipes() {
   }
 
   if (empty) empty.style.display = 'none';
-  grid.style.display = 'grid';
+  grid.style.display = recipeView === 'list' ? 'flex' : 'grid';
 
   filtered.forEach(r => {
     const el = document.createElement('div');
