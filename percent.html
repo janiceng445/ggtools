@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Percentage — GG.Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/percent.css">
+</head>
+<body>
+<div id="app">
+  <div id="nav-placeholder"></div>
+
+  <div id="page-container">
+    <div class="page-header">
+      <div class="accent-line" style="background:var(--accent)"></div>
+      <h1>Percentage</h1>
+      <p>Percent change, new values, and reverse calculations.</p>
+    </div>
+
+    <div class="pct-wrap">
+
+      <!-- Mode tabs -->
+      <div class="pct-tabs">
+        <button class="pct-tab active" onclick="setMode('change')">% Change</button>
+        <button class="pct-tab" onclick="setMode('new')">New Value</button>
+        <button class="pct-tab" onclick="setMode('original')">Find Original</button>
+      </div>
+
+      <!-- Panel: % Change -->
+      <div class="pct-panel" id="panel-change">
+        <div class="pct-section-label">From</div>
+        <div class="pct-input-row">
+          <input type="number" id="change-from" class="pct-input" placeholder="0" inputmode="decimal" oninput="calc()" onclick="this.select()">
+        </div>
+        <div class="pct-section-label">To</div>
+        <div class="pct-input-row">
+          <input type="number" id="change-to" class="pct-input" placeholder="0" inputmode="decimal" oninput="calc()" onclick="this.select()">
+        </div>
+      </div>
+
+      <!-- Panel: New Value -->
+      <div class="pct-panel hidden" id="panel-new">
+        <div class="pct-section-label">Starting Value</div>
+        <div class="pct-input-row">
+          <input type="number" id="new-base" class="pct-input" placeholder="0" inputmode="decimal" oninput="calc()" onclick="this.select()">
+        </div>
+        <div class="pct-section-label">Change</div>
+        <div class="pct-input-row pct-input-row--suffix">
+          <input type="number" id="new-pct" class="pct-input" placeholder="0" inputmode="decimal" oninput="calc()" onclick="this.select()">
+          <span class="pct-suffix">%</span>
+        </div>
+      </div>
+
+      <!-- Panel: Find Original -->
+      <div class="pct-panel hidden" id="panel-original">
+        <div class="pct-section-label">Final Value</div>
+        <div class="pct-input-row">
+          <input type="number" id="orig-final" class="pct-input" placeholder="0" inputmode="decimal" oninput="calc()" onclick="this.select()">
+        </div>
+        <div class="pct-section-label">Applied Change</div>
+        <div class="pct-input-row pct-input-row--suffix">
+          <input type="number" id="orig-pct" class="pct-input" placeholder="0" inputmode="decimal" oninput="calc()" onclick="this.select()">
+          <span class="pct-suffix">%</span>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div class="pct-result-wrap" id="pct-result-wrap">
+        <div class="pct-result" id="pct-result"></div>
+        <div class="pct-result-sub" id="pct-result-sub"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/percent.js"></script>
+<script>initNav();</script>
+</body>
+</html>

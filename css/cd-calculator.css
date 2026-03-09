@@ -1,0 +1,263 @@
+/* ── CD Calculator ── */
+
+#page-container {
+  display: block;
+}
+
+.cd-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 420px;
+  margin: 32px 0 0;
+}
+
+/* ── Fields ── */
+.cd-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cd-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text2);
+}
+
+.cd-label-hint {
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text3);
+}
+
+/* ── Input rows ── */
+.cd-input-row {
+  display: flex;
+  align-items: center;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  transition: border-color 0.15s;
+}
+
+.cd-input-row:focus-within { border-color: var(--accent); }
+
+.cd-input {
+  flex: 1;
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  padding: 0;
+  min-width: 0;
+}
+
+.cd-input:focus { outline: none; }
+.cd-input::placeholder { color: var(--text3); }
+.cd-input::-webkit-outer-spin-button,
+.cd-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.cd-input[type=number] { -moz-appearance: textfield; }
+
+.cd-affix {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text3);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.cd-affix--pre  { margin-right: 4px; }
+.cd-affix--post { margin-left: 4px; }
+
+/* ── Two-col (month + term) ── */
+.cd-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+/* ── Month picker ── */
+.cd-month-input {
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 13px 12px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.cd-month-input:focus { outline: none; border-color: var(--accent); }
+
+.cd-month-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+}
+
+/* ── Summary card ── */
+.cd-summary {
+  width: 100%;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.cd-summary.visible { display: flex; }
+
+.cd-summary-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.cd-summary-amount {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.cd-summary-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text3);
+}
+
+.cd-sep { color: var(--border); }
+
+/* ── Monthly table ── */
+.cd-table-wrap {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: none;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.cd-table-wrap.visible { display: block; }
+
+.cd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+}
+
+.cd-table thead th {
+  background: var(--surface2);
+  color: var(--text2);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-bottom: 1px solid var(--border);
+}
+
+.cd-th-month { text-align: left; }
+.cd-th-num   { text-align: right; }
+
+.cd-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+
+.cd-table tbody tr:last-child { border-bottom: none; }
+.cd-table tbody tr:hover { background: var(--surface2); }
+
+.cd-table td { padding: 10px 12px; }
+
+.cd-td-month {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text2);
+  white-space: nowrap;
+}
+
+.cd-td-interest {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--success);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.cd-td-balance {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Maturity row ── */
+.cd-row-final { background: var(--accent-bg) !important; }
+.cd-row-final:hover { background: var(--accent-bg-hover) !important; }
+.cd-row-final .cd-td-month   { color: var(--accent); font-weight: 700; }
+.cd-row-final .cd-td-balance { color: var(--accent); }
+
+.cd-days {
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text3);
+  vertical-align: middle;
+}
+
+.cd-badge {
+  display: inline-block;
+  margin-left: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+@media (max-width: 640px) {
+  .cd-wrap { margin: 32px auto 0; }
+}

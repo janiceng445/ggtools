@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CD Calculator — GG.Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/cd-calculator.css">
+</head>
+<body>
+<div id="app">
+  <div id="nav-placeholder"></div>
+
+  <div id="page-container">
+    <div class="page-header">
+      <div class="accent-line" style="background:var(--accent)"></div>
+      <h1>CD Calculator</h1>
+      <p>Month-by-month breakdown of your certificate of deposit.</p>
+    </div>
+
+    <div class="cd-wrap">
+
+      <!-- Deposit -->
+      <div class="cd-field">
+        <div class="cd-label">Initial Deposit</div>
+        <div class="cd-input-row">
+          <span class="cd-affix cd-affix--pre">$</span>
+          <input type="number" id="cd-deposit" class="cd-input" placeholder="0" inputmode="decimal" oninput="calc()" onclick="this.select()">
+        </div>
+      </div>
+
+      <!-- Rate -->
+      <div class="cd-field">
+        <div class="cd-label">Annual Rate (APY)</div>
+        <div class="cd-input-row">
+          <input type="number" id="cd-rate" class="cd-input" placeholder="0.00" inputmode="decimal" step="0.01" oninput="calc()" onclick="this.select()">
+          <span class="cd-affix cd-affix--post">%</span>
+        </div>
+      </div>
+
+      <!-- Start Date + Term -->
+      <div class="cd-two-col">
+        <div class="cd-field">
+          <div class="cd-label">Start Date</div>
+          <input type="date" id="cd-start-date" class="cd-month-input" oninput="onStartOrTermChange()">
+        </div>
+        <div class="cd-field">
+          <div class="cd-label">Term</div>
+          <div class="cd-input-row">
+            <input type="number" id="cd-term" class="cd-input" value="12" inputmode="numeric" min="1" max="360" oninput="onStartOrTermChange()" onclick="this.select()">
+            <span class="cd-affix cd-affix--post">mo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maturity Date (auto-filled, editable) -->
+      <div class="cd-field">
+        <div class="cd-label">Maturity Date <span class="cd-label-hint">auto-filled · edit to match your bank</span></div>
+        <input type="date" id="cd-maturity" class="cd-month-input" oninput="calc()">
+      </div>
+
+      <!-- Summary -->
+      <div class="cd-summary" id="cd-summary">
+        <div class="cd-summary-label">Matures at</div>
+        <div class="cd-summary-amount" id="cd-final"></div>
+        <div class="cd-summary-sub">
+          <span id="cd-interest-total"></span>
+          <span class="cd-sep">·</span>
+          <span id="cd-apy"></span>
+        </div>
+      </div>
+
+      <!-- Monthly table -->
+      <div class="cd-table-wrap" id="cd-table-wrap">
+        <table class="cd-table">
+          <thead>
+            <tr>
+              <th class="cd-th-month">Month</th>
+              <th class="cd-th-num">Interest</th>
+              <th class="cd-th-num">Balance</th>
+            </tr>
+          </thead>
+          <tbody id="cd-tbody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/cd-calculator.js"></script>
+<script>initNav();</script>
+</body>
+</html>
