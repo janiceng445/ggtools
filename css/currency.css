@@ -48,6 +48,10 @@
 }
 .cx-grid-btn:hover { border-color: var(--accent); background: var(--accent-bg); }
 .cx-grid-btn.active { border-color: var(--accent); background: var(--accent-bg-active); }
+.cx-grid-btn.draggable { cursor: grab; }
+.cx-grid-btn.cx-dragging { opacity: 0.35; cursor: grabbing; }
+.cx-grid-btn.cx-insert-before { border-left: 2px solid var(--accent); }
+.cx-grid-btn.cx-insert-after  { border-right: 2px solid var(--accent); }
 
 .cx-grid-sym {
   font-family: 'Outfit', sans-serif;

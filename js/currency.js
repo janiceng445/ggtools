@@ -34,15 +34,21 @@ const CURRENCIES = [
 ];
 
 const TOP_CODES = ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'INR', 'HKD'];
+let topCodes = JSON.parse(localStorage.getItem('cx-order') || 'null') || [...TOP_CODES];
 
 const SAVED = JSON.parse(localStorage.getItem('cx-selection') || '{}');
 let fromCode     = SAVED.from || 'USD';
 let toCode       = SAVED.to   || 'EUR';
 let pickerTarget = 'from';
 let rateCache    = {};
+let dragSrc      = null;
 
 function saveSelection() {
   localStorage.setItem('cx-selection', JSON.stringify({ from: fromCode, to: toCode }));
+}
+
+function saveOrder() {
+  localStorage.setItem('cx-order', JSON.stringify(topCodes));
 }
 
 function getCurrency(code) { return CURRENCIES.find(c => c.code === code); }
@@ -129,15 +135,53 @@ function renderGrids() {
 function renderGrid(containerId, activeCode, onSelect) {
   const grid  = document.getElementById(containerId);
   grid.innerHTML = '';
-  // Always show top currencies; if active is a non-top currency, append it
-  const codes = [...TOP_CODES];
+  // Show user-ordered top currencies; append active if it's a non-top currency
+  const codes = [...topCodes];
   if (!codes.includes(activeCode)) codes.push(activeCode);
   codes.forEach(code => {
-    const cur = getCurrency(code);
-    const btn = document.createElement('button');
-    btn.className = 'cx-grid-btn' + (code === activeCode ? ' active' : '');
+    const isTop = topCodes.includes(code);
+    const cur   = getCurrency(code);
+    const btn   = document.createElement('button');
+    btn.className = 'cx-grid-btn' + (code === activeCode ? ' active' : '') + (isTop ? ' draggable' : '');
     btn.innerHTML = `<span class="cx-grid-sym">${cur.symbol}</span><span class="cx-grid-code">${cur.code}</span>`;
+
     btn.addEventListener('click', () => onSelect(code));
+
+    if (isTop) {
+      btn.draggable = true;
+      btn.addEventListener('dragstart', e => {
+        dragSrc = { code, containerId };
+        e.dataTransfer.effectAllowed = 'move';
+        setTimeout(() => btn.classList.add('cx-dragging'), 0);
+      });
+      btn.addEventListener('dragend', () => btn.classList.remove('cx-dragging'));
+      btn.addEventListener('dragover', e => {
+        if (dragSrc?.containerId !== containerId || dragSrc.code === code) return;
+        e.preventDefault();
+        const mid = btn.getBoundingClientRect().left + btn.offsetWidth / 2;
+        btn.classList.remove('cx-insert-before', 'cx-insert-after');
+        btn.classList.add(e.clientX < mid ? 'cx-insert-before' : 'cx-insert-after');
+      });
+      btn.addEventListener('dragleave', () => {
+        btn.classList.remove('cx-insert-before', 'cx-insert-after');
+      });
+      btn.addEventListener('drop', e => {
+        e.preventDefault();
+        const wasBefore = btn.classList.contains('cx-insert-before');
+        btn.classList.remove('cx-insert-before', 'cx-insert-after');
+        if (!dragSrc || dragSrc.code === code || dragSrc.containerId !== containerId) return;
+        const fi = topCodes.indexOf(dragSrc.code);
+        if (fi === -1 || !topCodes.includes(code)) return;
+        const arr = [...topCodes];
+        arr.splice(fi, 1);
+        const newTi = arr.indexOf(code);
+        arr.splice(wasBefore ? newTi : newTi + 1, 0, dragSrc.code);
+        topCodes = arr;
+        saveOrder();
+        renderGrids();
+      });
+    }
+
     grid.appendChild(btn);
   });
 }
