@@ -46,7 +46,7 @@
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 10px 14px;
+  padding: 8px 14px;
   transition: border-color 0.15s;
 }
 
@@ -55,7 +55,7 @@
 .cd-input {
   flex: 1;
   font-family: 'Outfit', sans-serif;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text);
   background: transparent;
@@ -72,7 +72,7 @@
 
 .cd-affix {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text3);
   flex-shrink: 0;
