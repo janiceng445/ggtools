@@ -33,22 +33,49 @@ const CURRENCIES = [
   { code: 'ZAR', symbol: 'R',    name: 'South African Rand' },
 ];
 
-const TOP_CODES = ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'INR', 'HKD'];
-let topCodes = JSON.parse(localStorage.getItem('cx-order') || 'null') || [...TOP_CODES];
+const LOCKED = 'USD'; // always in grid, cannot be removed
+let favCodes = JSON.parse(localStorage.getItem('cx-favs') || 'null') || [LOCKED, 'EUR'];
 
 const SAVED = JSON.parse(localStorage.getItem('cx-selection') || '{}');
 let fromCode     = SAVED.from || 'USD';
 let toCode       = SAVED.to   || 'EUR';
 let pickerTarget = 'from';
 let rateCache    = {};
-let dragSrc      = null;
+let dragSrc          = null;
+let dropInsertBefore = true;
+let dropLine         = null;
+
+function initDropLine() {
+  dropLine = document.createElement('div');
+  dropLine.className = 'cx-drop-line';
+  document.body.appendChild(dropLine);
+}
+
+function showDropLine(btn, before) {
+  const rect = btn.getBoundingClientRect();
+  const x    = before ? rect.left - 1 : rect.right - 1;
+  dropLine.style.left    = x + 'px';
+  dropLine.style.top     = (rect.top - 2) + 'px';
+  dropLine.style.height  = (rect.height + 4) + 'px';
+  dropLine.style.display = 'block';
+}
+
+function hideDropLine() {
+  if (dropLine) dropLine.style.display = 'none';
+}
 
 function saveSelection() {
   localStorage.setItem('cx-selection', JSON.stringify({ from: fromCode, to: toCode }));
 }
 
-function saveOrder() {
-  localStorage.setItem('cx-order', JSON.stringify(topCodes));
+function saveFavs() {
+  localStorage.setItem('cx-favs', JSON.stringify(favCodes));
+}
+
+function resetIfActive(code) {
+  if (fromCode === code) { fromCode = LOCKED; }
+  if (toCode === code)   { toCode = favCodes.find(c => c !== fromCode) || LOCKED; }
+  saveSelection();
 }
 
 function getCurrency(code) { return CURRENCIES.find(c => c.code === code); }
@@ -70,8 +97,8 @@ async function convert() {
   const amount = parseFloat(raw);
   const result = document.getElementById('cx-result');
   const rateEl = document.getElementById('cx-rate');
+  const wrap   = document.getElementById('cx-result-wrap');
 
-  const wrap = document.getElementById('cx-result-wrap');
   if (!raw || isNaN(amount)) {
     result.textContent = '';
     rateEl.textContent = '';
@@ -114,6 +141,36 @@ function updateSymbol() {
   document.getElementById('input-symbol').textContent = getCurrency(fromCode).symbol;
 }
 
+// ── Trash zone ──
+
+function showTrash() { document.getElementById('cx-trash').classList.add('visible'); }
+function hideTrash() {
+  const el = document.getElementById('cx-trash');
+  el.classList.remove('visible', 'over');
+}
+
+function initTrash() {
+  const trash = document.getElementById('cx-trash');
+  trash.addEventListener('dragover', e => {
+    if (!dragSrc) return;
+    e.preventDefault();
+    trash.classList.add('over');
+  });
+  trash.addEventListener('dragleave', () => trash.classList.remove('over'));
+  trash.addEventListener('drop', e => {
+    e.preventDefault();
+    if (!dragSrc || dragSrc.code === LOCKED) return;
+    const removed = dragSrc.code;
+    favCodes = favCodes.filter(c => c !== removed);
+    saveFavs();
+    resetIfActive(removed);
+    renderGrids();
+    updateSymbol();
+    convert();
+    hideTrash();
+  });
+}
+
 // ── Inline grids ──
 
 function renderGrids() {
@@ -133,51 +190,54 @@ function renderGrids() {
 }
 
 function renderGrid(containerId, activeCode, onSelect) {
-  const grid  = document.getElementById(containerId);
+  const grid = document.getElementById(containerId);
   grid.innerHTML = '';
-  // Show user-ordered top currencies; append active if it's a non-top currency
-  const codes = [...topCodes];
+  // Show favorited currencies; append activeCode if it's not favorited
+  const codes = [...favCodes];
   if (!codes.includes(activeCode)) codes.push(activeCode);
+
   codes.forEach(code => {
-    const isTop = topCodes.includes(code);
-    const cur   = getCurrency(code);
-    const btn   = document.createElement('button');
-    btn.className = 'cx-grid-btn' + (code === activeCode ? ' active' : '') + (isTop ? ' draggable' : '');
-    btn.innerHTML = `<span class="cx-grid-sym">${cur.symbol}</span><span class="cx-grid-code">${cur.code}</span>`;
+    const isFav    = favCodes.includes(code);
+    const isLocked = code === LOCKED;
+    const cur      = getCurrency(code);
+    const btn      = document.createElement('button');
+    btn.className  = 'cx-grid-btn' + (code === activeCode ? ' active' : '') + (isFav ? ' draggable' : '');
+    btn.innerHTML  = `<span class="cx-grid-sym">${cur.symbol}</span><span class="cx-grid-code">${cur.code}</span>`;
 
     btn.addEventListener('click', () => onSelect(code));
 
-    if (isTop) {
+    if (isFav) {
       btn.draggable = true;
       btn.addEventListener('dragstart', e => {
         dragSrc = { code, containerId };
         e.dataTransfer.effectAllowed = 'move';
         setTimeout(() => btn.classList.add('cx-dragging'), 0);
+        if (!isLocked) showTrash();
       });
-      btn.addEventListener('dragend', () => btn.classList.remove('cx-dragging'));
+      btn.addEventListener('dragend', () => {
+        btn.classList.remove('cx-dragging');
+        hideDropLine();
+        hideTrash();
+      });
       btn.addEventListener('dragover', e => {
         if (dragSrc?.containerId !== containerId || dragSrc.code === code) return;
         e.preventDefault();
-        const mid = btn.getBoundingClientRect().left + btn.offsetWidth / 2;
-        btn.classList.remove('cx-insert-before', 'cx-insert-after');
-        btn.classList.add(e.clientX < mid ? 'cx-insert-before' : 'cx-insert-after');
+        dropInsertBefore = e.clientX < btn.getBoundingClientRect().left + btn.offsetWidth / 2;
+        showDropLine(btn, dropInsertBefore);
       });
-      btn.addEventListener('dragleave', () => {
-        btn.classList.remove('cx-insert-before', 'cx-insert-after');
-      });
+      btn.addEventListener('dragleave', () => hideDropLine());
       btn.addEventListener('drop', e => {
         e.preventDefault();
-        const wasBefore = btn.classList.contains('cx-insert-before');
-        btn.classList.remove('cx-insert-before', 'cx-insert-after');
+        hideDropLine();
         if (!dragSrc || dragSrc.code === code || dragSrc.containerId !== containerId) return;
-        const fi = topCodes.indexOf(dragSrc.code);
-        if (fi === -1 || !topCodes.includes(code)) return;
-        const arr = [...topCodes];
+        const fi = favCodes.indexOf(dragSrc.code);
+        if (fi === -1 || !favCodes.includes(code)) return;
+        const arr = [...favCodes];
         arr.splice(fi, 1);
         const newTi = arr.indexOf(code);
-        arr.splice(wasBefore ? newTi : newTi + 1, 0, dragSrc.code);
-        topCodes = arr;
-        saveOrder();
+        arr.splice(dropInsertBefore ? newTi : newTi + 1, 0, dragSrc.code);
+        favCodes = arr;
+        saveFavs();
         renderGrids();
       });
     }
@@ -186,13 +246,13 @@ function renderGrid(containerId, activeCode, onSelect) {
   });
 }
 
-// ── More currencies picker ──
+// ── Picker ──
 
 function openMore(target) {
   pickerTarget = target;
   document.getElementById('cx-picker-title').textContent = target === 'from' ? 'From currency' : 'To currency';
   document.getElementById('cx-picker-search').value = '';
-  renderMoreList(CURRENCIES.filter(c => !TOP_CODES.includes(c.code)));
+  renderMoreList(CURRENCIES);
   document.getElementById('cx-picker-overlay').classList.add('open');
   setTimeout(() => document.getElementById('cx-picker-search').focus(), 300);
 }
@@ -205,13 +265,17 @@ function filterMore() {
   const q = document.getElementById('cx-picker-search').value.toLowerCase();
   const list = q
     ? CURRENCIES.filter(c => c.code.toLowerCase().includes(q) || c.name.toLowerCase().includes(q))
-    : CURRENCIES.filter(c => !TOP_CODES.includes(c.code));
+    : CURRENCIES;
   renderMoreList(list);
 }
 
 function selectCurrency(code) {
   if (pickerTarget === 'from') fromCode = code;
   else toCode = code;
+  if (!favCodes.includes(code)) {
+    favCodes = [...favCodes, code];
+    saveFavs();
+  }
   saveSelection();
   renderGrids();
   updateSymbol();
@@ -233,4 +297,6 @@ function renderMoreList(list) {
 }
 
 // ── Init ──
+initDropLine();
+initTrash();
 renderGrids();

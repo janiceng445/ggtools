@@ -50,8 +50,29 @@
 .cx-grid-btn.active { border-color: var(--accent); background: var(--accent-bg-active); }
 .cx-grid-btn.draggable { cursor: grab; }
 .cx-grid-btn.cx-dragging { opacity: 0.35; cursor: grabbing; }
-.cx-grid-btn.cx-insert-before { border-left: 2px solid var(--accent); }
-.cx-grid-btn.cx-insert-after  { border-right: 2px solid var(--accent); }
+
+/* ── Drag insert line ── */
+.cx-drop-line {
+  position: fixed;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 200;
+  display: none;
+}
+.cx-drop-line::before,
+.cx-drop-line::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  width: 10px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+.cx-drop-line::before { top: 0; }
+.cx-drop-line::after  { bottom: 0; }
 
 .cx-grid-sym {
   font-family: 'Outfit', sans-serif;
@@ -183,6 +204,29 @@
   min-height: 1.2em;
 }
 
+/* ── Trash zone ── */
+.cx-trash {
+  display: none;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text3);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.cx-trash.visible { display: flex; }
+.cx-trash.over {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(255, 68, 68, 0.08);
+}
+
 /* ── Picker overlay (More currencies) ── */
 .cx-picker-overlay {
   position: fixed;
@@ -279,6 +323,7 @@
   font-size: 0.78rem;
   color: var(--text3);
 }
+
 
 @media (max-width: 640px) {
   .cx-wrap { margin: 40px auto 0; }

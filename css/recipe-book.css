@@ -81,13 +81,13 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: var(--accent-bg-hover);
-  border: 1px solid rgba(224,32,32,0.4);
-  color: var(--accent);
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  color: var(--text);
   font-size: 1.6rem;
   line-height: 1;
   cursor: pointer;
-  box-shadow: 0 4px 16px var(--accent-bg-hover);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 
 /* ── Recipe Grid ── */
