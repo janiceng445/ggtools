@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Currency — GG.Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/currency.css">
+</head>
+<body>
+<div id="app">
+  <div id="nav-placeholder"></div>
+
+  <div id="page-container">
+    <div class="page-header">
+      <div class="accent-line" style="background:var(--accent)"></div>
+      <h1>Currency</h1>
+      <p>Live exchange rates via ECB.</p>
+    </div>
+
+    <div class="cx-wrap">
+
+      <!-- FROM grid -->
+      <div class="cx-section-label">From</div>
+      <div class="cx-grid" id="from-grid"></div>
+      <button class="cx-more-btn" onclick="openMore('from')">+ More currencies</button>
+
+      <!-- Amount input -->
+      <div class="cx-amount-wrap">
+        <span class="cx-input-symbol" id="input-symbol">$</span>
+        <input type="text" id="cx-input" class="cx-input" placeholder="0" inputmode="decimal" oninput="convert()" onclick="this.select()">
+      </div>
+
+      <!-- Swap + TO label -->
+      <div class="cx-mid-row">
+        <div class="cx-section-label" style="margin:0">To</div>
+        <button class="cx-swap-btn" onclick="swapCurrencies()" title="Swap">⇅</button>
+      </div>
+
+      <!-- TO grid -->
+      <div class="cx-grid" id="to-grid"></div>
+      <button class="cx-more-btn" onclick="openMore('to')">+ More currencies</button>
+
+      <!-- Result -->
+      <div class="cx-result-wrap" id="cx-result-wrap">
+        <div class="cx-result" id="cx-result"></div>
+        <div class="cx-rate" id="cx-rate"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- More currencies picker (for non-top currencies) -->
+<div class="cx-picker-overlay" id="cx-picker-overlay" onclick="closePicker()">
+  <div class="cx-picker-sheet" onclick="event.stopPropagation()">
+    <div class="cx-picker-title" id="cx-picker-title">More currencies</div>
+    <input type="text" class="cx-picker-search" id="cx-picker-search" placeholder="Search…" oninput="filterMore()">
+    <div class="cx-more-list" id="cx-more-list"></div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/currency.js"></script>
+<script>initNav();</script>
+</body>
+</html>

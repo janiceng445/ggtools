@@ -1,0 +1,281 @@
+/* ── Currency Converter ── */
+
+#page-container {
+  display: block;
+}
+
+.cx-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 380px;
+  margin: 40px 0 0;
+}
+
+/* ── Section labels ── */
+.cx-section-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text2);
+  width: 100%;
+  margin-bottom: -4px;
+}
+
+/* ── Inline currency grid ── */
+.cx-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  width: 100%;
+}
+
+.cx-grid-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 4px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.cx-grid-btn:hover { border-color: var(--accent); background: var(--accent-bg); }
+.cx-grid-btn.active { border-color: var(--accent); background: var(--accent-bg-active); }
+
+.cx-grid-sym {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.cx-grid-btn.active .cx-grid-sym { color: var(--accent); }
+
+.cx-grid-code {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.03em;
+}
+
+/* ── More button ── */
+.cx-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: 100px;
+  padding: 6px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.15s;
+  align-self: center;
+}
+.cx-more-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Mid row (To label + Swap) ── */
+.cx-mid-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.cx-swap-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 1rem;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.cx-swap-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Amount input ── */
+.cx-amount-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  width: 100%;
+  border-bottom: 2px solid var(--border);
+  padding: 8px 0;
+  transition: border-color 0.15s;
+}
+.cx-amount-wrap:focus-within { border-bottom-color: var(--accent); }
+
+.cx-input-symbol {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text3);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.cx-input {
+  flex: 1;
+  font-family: 'Outfit', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 0;
+  min-width: 0;
+}
+.cx-input:focus { outline: none; }
+.cx-input::placeholder { color: var(--text3); }
+
+/* ── Result ── */
+.cx-result-wrap {
+  width: 100%;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+  min-height: 80px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.cx-result-wrap.visible { display: flex; }
+
+.cx-result {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  min-height: 3rem;
+  line-height: 1;
+}
+
+.cx-rate {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  color: var(--text3);
+  min-height: 1.2em;
+}
+
+/* ── Picker overlay (More currencies) ── */
+.cx-picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.cx-picker-overlay.open { opacity: 1; pointer-events: all; }
+
+.cx-picker-sheet {
+  width: 100%;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 20px 20px 36px;
+  transform: translateY(100%);
+  transition: transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 75vh;
+  overflow: hidden;
+}
+.cx-picker-overlay.open .cx-picker-sheet { transform: translateY(0); }
+
+.cx-picker-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text2);
+  text-align: center;
+}
+
+.cx-picker-search {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text);
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+.cx-picker-search:focus { outline: none; border-color: var(--accent); }
+.cx-picker-search::placeholder { color: var(--text3); }
+
+.cx-more-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.cx-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 4px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+  border-radius: 6px;
+}
+.cx-picker-item:last-child { border-bottom: none; }
+.cx-picker-item:hover { background: var(--surface2); }
+.cx-picker-item.active { background: var(--accent-bg); }
+
+.cx-pi-sym {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  min-width: 28px;
+  text-align: center;
+}
+.cx-picker-item.active .cx-pi-sym { color: var(--accent); }
+
+.cx-pi-code {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  min-width: 40px;
+}
+.cx-picker-item.active .cx-pi-code { color: var(--accent); }
+
+.cx-pi-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  color: var(--text3);
+}
+
+@media (max-width: 640px) {
+  .cx-wrap { margin: 40px auto 0; }
+}

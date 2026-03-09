@@ -237,8 +237,6 @@
 }
 
 .ah-tier-card {
-  background: var(--surface2);
-  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 12px 8px;
   display: flex;
@@ -252,7 +250,6 @@
   font-family: 'Inter', sans-serif;
   font-size: 0.68rem;
   font-weight: 600;
-  color: var(--text2);
   white-space: nowrap;
 }
 
@@ -260,29 +257,48 @@
   font-family: 'Outfit', sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
-  color: var(--text3);
+  opacity: 0.6;
 }
 
 .ah-tier-sell {
   font-family: 'Outfit', sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--accent);
   word-break: break-all;
 }
 
 .ah-tier-profit {
   font-family: 'Inter', sans-serif;
   font-size: 0.62rem;
-  color: var(--text3);
+  opacity: 0.6;
 }
 
-/* Tier accent left borders */
-.ah-tier-card.breakeven { border-left: 3px solid var(--text3); }
-.ah-tier-card.minimum   { border-left: 3px solid #4ade80; }
-.ah-tier-card.good      { border-left: 3px solid #22d3ee; }
-.ah-tier-card.great     { border-left: 3px solid #a78bfa; }
-.ah-tier-card.extreme   { border-left: 3px solid var(--accent); }
+/* Tier colors: border + faded bg + matching text */
+.ah-tier-card.breakeven {
+  background: rgba(136,136,136,0.08);
+  border: 1px solid rgba(136,136,136,0.35);
+  color: #aaa;
+}
+.ah-tier-card.minimum {
+  background: rgba(74,222,128,0.08);
+  border: 1px solid rgba(74,222,128,0.35);
+  color: #4ade80;
+}
+.ah-tier-card.good {
+  background: rgba(34,211,238,0.08);
+  border: 1px solid rgba(34,211,238,0.35);
+  color: #22d3ee;
+}
+.ah-tier-card.great {
+  background: rgba(167,139,250,0.08);
+  border: 1px solid rgba(167,139,250,0.35);
+  color: #a78bfa;
+}
+.ah-tier-card.extreme {
+  background: var(--accent2-bg);
+  border: 1px solid var(--accent2-border);
+  color: var(--accent2);
+}
 
 /* ── Resell comparison ── */
 .ah-resell-header {
